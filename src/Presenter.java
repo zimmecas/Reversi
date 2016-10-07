@@ -1,11 +1,12 @@
 
 public class Presenter {
-	/*
+	/**
 	 * 
 	 */
 	
 	Model model;
 	View view;
+	
 	
 	public View getView(){
 		return view;
@@ -23,8 +24,8 @@ public class Presenter {
 		model = m;
 	}
 	
-	public boolean placePiece(int x, int y, Piece p){
-		return model.placePiece(x, y, p);
+	public boolean placePiece(int x, int y){
+		return model.placePiece(x, y);
 	}
 	
 	
