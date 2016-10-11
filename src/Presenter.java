@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 /**
  * 
  * @author Caitlin Crowe
@@ -10,7 +12,7 @@ public class Presenter {
 	/**
 	 * 
 	 */
-	private Model model;
+	private static Model model;
 	/**
 	 * 
 	 */
@@ -19,7 +21,7 @@ public class Presenter {
 	/**
 	 * 
 	 */
-	private Scanner s = new Scanner(System.in);
+	private static Scanner s = new Scanner(System.in);
 	/**
 	 * The Presenter constructor.
 	 * @param m is the initial value of model.
@@ -28,6 +30,9 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
+		while(!model.isGameOver()){
+			nextTurn();
+		}
 	}
 	
 	/**
@@ -68,9 +73,44 @@ public class Presenter {
 	 * @param y is the y position of where to place the piece.
 	 * @return model.placePiece(x, y)
 	 */
-	public final boolean placePiece(/*final int x, final int y*/) {
-		int x = s.nextInt();
-		int y = s.nextInt();
+	private final static boolean placePiece(final int x, final int y) {
 		return model.placePiece(x, y);
 	}
+	
+	public static void getInput(){
+		System.out.print("Input x value");
+		int x = s.nextInt();
+		x--;
+		System.out.print("Input y value");
+		int y = s.nextInt();
+		y--;
+		while (!placePiece(y,x)){
+			System.out.print("Please enter a valid piece location");
+			x = s.nextInt();
+			x--;
+			y = s.nextInt();
+			y--;
+		}
+		
+	}
+	
+	public static Piece nextTurn(){
+		if(!model.isGameOver()){
+			getInput();
+			model.print();
+			model.changeTurn();	
+		}
+		else {
+			JOptionPane pane = new JOptionPane();
+			JOptionPane.showMessageDialog(pane, model.getPlayer() + " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
+		}
+		return model.getPlayer();
+			
+		
+	
+	}
+		public static void main(){
+			
+			
+		}
 }

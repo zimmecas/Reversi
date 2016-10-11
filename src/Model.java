@@ -208,6 +208,7 @@ public class Model {
 		} else {
 			changeTurn();
 			if (anyMovesLeft()) {
+				changeTurn();
 				return false;
 			}
 		}
@@ -236,5 +237,10 @@ public class Model {
 	 public final void changeTurn() {
 		 player = player.flipPiece();
 	 }
+	 
+	 public final Piece getPlayer(){
+		 return player;
+	 }
+	 
 	
 }
