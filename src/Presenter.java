@@ -11,7 +11,6 @@ public class Presenter {
 	 * 
 	 */
 	private Model model;
-	
 	/**
 	 * 
 	 */
