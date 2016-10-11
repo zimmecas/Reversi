@@ -41,9 +41,17 @@ public class Model {
 	 * This method prints the board to the screen.
 	 */
 	public final void print() {
+		System.out.println("   1   2   3   4   5   6   7   8 \n"
+				         + "  ______________________________");
 		for (int i = 0; i < HEIGHT; i++) {
+			System.out.print((i + 1) + "|");
 			for (int j = 0; j < WIDTH; j++) {
-				System.out.print(board[j][i] + "\t");
+				if(board[j][i] == Piece.EMPTY)
+					System.out.print("{0}" + " ");
+				if(board[j][i] == Piece.BLACK)
+					System.out.print("{1}" + " ");
+				if(board[j][i] == Piece.WHITE)
+					System.out.print("{2}" + " ");
 			}
 			System.out.println();
 		}

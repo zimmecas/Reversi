@@ -1,4 +1,4 @@
-
+import java.util.Scanner;
 
 /**
  * 
@@ -17,6 +17,10 @@ public class Presenter {
 	 */
 	private View view;
 	
+	/**
+	 * 
+	 */
+	private Scanner s = new Scanner(System.in);
 	/**
 	 * The Presenter constructor.
 	 * @param m is the initial value of model.
@@ -65,8 +69,9 @@ public class Presenter {
 	 * @param y is the y position of where to place the piece.
 	 * @return model.placePiece(x, y)
 	 */
-	public final boolean placePiece(final int x, final int y) {
+	public final boolean placePiece(/*final int x, final int y*/) {
+		int x = s.nextInt();
+		int y = s.nextInt();
 		return model.placePiece(x, y);
 	}
-
 }
