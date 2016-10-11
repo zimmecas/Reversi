@@ -4,8 +4,8 @@ public class Presenter {
 	 * 
 	 */
 	
-	Model model;
-	View view;
+	private Model model;
+	private View view;
 	
 	public Presenter(Model m, View v){
 		model = m;
