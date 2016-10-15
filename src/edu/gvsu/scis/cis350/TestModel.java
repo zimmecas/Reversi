@@ -12,7 +12,72 @@ public class TestModel {
 	}
 
 	@Test
-	public void test() {
+	public void testModel() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testPrint() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testMakeBoard() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testFillBoard() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testPlacePiece() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testIsValidMove() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCheckIfFlip() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCheckDirection() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testFlipDirection() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testFlip() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testIsGameOver() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAnyMovesLeft() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testChangeTurn() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetPlayer() {
 		fail("Not yet implemented");
 	}
 
