@@ -29,7 +29,6 @@ public class Model {
 	 * Vertical position of the first starting piece.
 	 */
 	private static final int YSTART = 3;
-
 	/**
 	 * This constructor makes and fills a board when called.
 	 */
@@ -246,4 +245,33 @@ public class Model {
 	public final Piece getPlayer() {
 		return player;
 	}	
+	
+	/**
+	 * This method counts the total number of empty spaces, black pieces, 
+	 * and white pieces on the board and returns the numbers in results[].
+	 * @return results index 0 is # of blank spaces, index 1 is # of black 
+	 * pieces, index 2 is # of white pieces.
+	 * 
+	 */
+	public final int[] countPieces() {
+		int[] results = new int[3];
+		results[0] = HEIGHT * WIDTH;
+		results[1] = 0;
+		results[2] = 0;
+		for (int h = 0; h < HEIGHT; h++) {
+			for (int w = 0; w < WIDTH; w++) {
+				if (board[h][w] == Piece.BLACK) {
+					results[1]++; 
+					results[0]--;
+				} else if (board[h][w] == Piece.WHITE) {
+					results[2]++;
+					results[0]--;
+				}
+			}
+		}
+		System.out.print(results[0]);
+		System.out.print(results[1]);
+		System.out.print(results[2]);
+		return results;
+	}
 }

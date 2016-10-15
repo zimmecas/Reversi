@@ -6,79 +6,93 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestModel {
+	
+	Model m;
 
 	@Before
-	public void setUp() throws Exception {
+	public final void setUp() throws Exception {
+		m = new Model();
 	}
 
 	@Test
-	public void testModel() {
+	public final void testModel() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testPrint() {
+	public final void testPrint() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testMakeBoard() {
+	public final void testMakeBoard() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testFillBoard() {
+	public final void testFillBoard() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testPlacePiece() {
+	public final void testPlacePiece() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testIsValidMove() {
+	public final void testIsValidMove() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testCheckIfFlip() {
+	public final void testCheckIfFlip() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testCheckDirection() {
+	public final void testCheckDirection() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testFlipDirection() {
+	public final void testFlipDirection() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testFlip() {
+	public final void testFlip() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testIsGameOver() {
+	public final void testIsGameOver() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testAnyMovesLeft() {
+	public final void testAnyMovesLeft() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testChangeTurn() {
+	public final void testChangeTurn() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testGetPlayer() {
+	public final void testGetPlayer() {
 		fail("Not yet implemented");
 	}
-
+	
+	@Test
+	public final void testCountPieces() {
+		int[] arr = new int[3];
+		arr[0] = 60;
+		arr[1] = 2;
+		arr[2] = 2;		
+		System.out.print(arr[0]);
+		System.out.print(arr[1]);
+		System.out.print(arr[2]);
+		assertArrayEquals("results array not equal", m.countPieces(), arr);
+	}
 }
