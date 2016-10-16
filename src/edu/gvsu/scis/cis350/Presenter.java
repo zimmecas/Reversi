@@ -80,11 +80,10 @@ public class Presenter {
 	 * @return This returns true if the piece was placed, return false otherwise
 	 */
 	private static boolean placePiece(final int x, final int y) {
-		if (model.placePiece(x, y)){
+		if (model.placePiece(x, y)) {
 			return true;
 		} else {
 			return false;
-			
 		}
 	}
 

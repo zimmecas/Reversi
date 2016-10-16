@@ -58,6 +58,9 @@ public class Model {
 			}
 			System.out.println();
 		}
+		int[] results = countPieces();
+		System.out.println("B: " + results[1] + "\t" + "\t" + "\t" + "     " +
+		"W: " + results[2]);
 	}
 
 	/**
