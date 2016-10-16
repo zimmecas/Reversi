@@ -41,27 +41,25 @@ public class TestModel {
 
 	@Test
 	public final void testIsValidMove() {
-		fail("Not yet implemented");
+		assertEquals("Piece at 3,2 should be a valid move", m.isValidMove(3,2), true);
 	}
-
+	
 	@Test
-	public final void testCheckIfFlip() {
-		fail("Not yet implemented");
+	public final void testIsValidMove1() {
+		m.placePiece(3, 2);
+		m.changeTurn();
+		assertEquals("Piece at 2,2 should be valid move", m.isValidMove(2,2), true);
 	}
-
+	
 	@Test
-	public final void testCheckDirection() {
-		fail("Not yet implemented");
+	public final void testIsValidMove2() {
+		m.placePiece(3, 2);
+		assertEquals("Another piece at 3,2 should be invalid move", m.isValidMove(3,2), false);
 	}
-
 	@Test
-	public final void testFlipDirection() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public final void testFlip() {
-		fail("Not yet implemented");
+	public final void testIsValidMove3() {
+		m.placePiece(3, 2);
+		assertEquals("Another piece at 0,0 should be invalid move", m.isValidMove(0,0), false);
 	}
 
 	@Test
@@ -71,7 +69,31 @@ public class TestModel {
 
 	@Test
 	public final void testAnyMovesLeft() {
-		fail("Not yet implemented");
+		assertEquals("Should be moves left", m.anyMovesLeft(), true);
+	}
+	
+	@Test
+	public final void testAnyMovesLeft1() {
+		m.placePiece(3, 2);
+		m.placePiece(4, 5);
+		assertEquals("Should be not be moves left", m.anyMovesLeft(), false);
+	}
+	
+	@Test
+	public final void testAnyMovesLeft2() {
+		m.makeEndGame1();
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
+	}
+	
+	@Test
+	public final void testAnyMovesLeft3() {
+		m.makeEndGame2();
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
+	}
+	@Test
+	public final void testAnyMovesLeft4() {
+		m.makeEndGame3();
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
 	}
 
 	@Test

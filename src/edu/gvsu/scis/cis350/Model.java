@@ -123,7 +123,7 @@ public class Model {
 	 * @return This returns true if at least one flip would 
 	 * occur if a piece were placed at x, y
 	 */
-	public final boolean checkIfFlip(final int x, final int y) {
+	private final boolean checkIfFlip(final int x, final int y) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if (checkDirection(x, y, i, j)) {
@@ -143,7 +143,7 @@ public class Model {
 	 * @param yDir This is a number between -1 and 1 to indicate y direction
 	 * @return This returns true if flips should occur in the given direction
 	 */
-	public final boolean checkDirection(final int x, final int y,
+	private final boolean checkDirection(final int x, final int y,
 			final int xDir, final int yDir) {
 		int yDisp = yDir;
 		int xDisp = xDir;
@@ -168,7 +168,7 @@ public class Model {
 	 * @param yDir This is a number between -1 and 1 to indicate y direction
 	 * @return This returns true if flip completed successfully
 	 */
-	public final boolean flipDirection(final int x, final int y,
+	private final boolean flipDirection(final int x, final int y,
 			final int xDir, final int yDir) {
 		int yDisp = yDir;
 		int xDisp = xDir;
@@ -190,7 +190,7 @@ public class Model {
 	 * @param x This is the horizontal position of placed piece
 	 * @param y This is the vertical position of placed piece
 	 */
-	public final void flip(final int x, final int y) {
+	private final void flip(final int x, final int y) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if (checkDirection(x, y, i, j)) {
@@ -270,5 +270,51 @@ public class Model {
 			}
 		}
 		return results;
+	}
+	
+	/**
+	 * Makes board into a configuration where white wins, there are no more valid moves 
+	 * and there are empty spaces
+	 */
+	public void makeEndGame1(){
+		for (int h = 0; h < HEIGHT; h++) {
+			for (int w = 0; w < WIDTH; w++) {
+				board[h][w] = Piece.WHITE;
+			}
+		}
+		board[6][4] = Piece.EMPTY;
+		board[6][5] = Piece.EMPTY;
+		board[7][3] = Piece.EMPTY;
+		board[7][4] = Piece.EMPTY;
+		board[7][5] = Piece.BLACK;
+		board[7][6] = Piece.EMPTY;
+	}
+	
+	/**
+	 * Makes board where all pieces are black (not actually achievable.)
+	 */
+	public void makeEndGame2(){
+		for (int h = 0; h < HEIGHT; h++) {
+			for (int w = 0; w < WIDTH; w++) {
+				board[h][w] = Piece.BLACK;
+			}
+		}
+	}
+	
+	/**
+	 * Makes board where half is black and half is white
+	 * (probably not actually achievable in this configuration.)
+	 */
+	public void makeEndGame3(){
+		for (int h = 0; h < HEIGHT; h++) {
+			for (int w = 0; w < WIDTH/2; w++) {
+				board[h][w] = Piece.BLACK;
+			}
+		}
+		for (int h = 0; h < HEIGHT; h++) {
+			for (int w = WIDTH/2; w < WIDTH; w++) {
+				board[h][w] = Piece.WHITE;
+			}
+		}
 	}
 }
