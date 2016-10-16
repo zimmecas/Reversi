@@ -81,7 +81,14 @@ public class TestModel {
 
 	@Test
 	public final void testGetPlayer() {
-		fail("Not yet implemented");
+		assertEquals("players not equal", m.getPlayer(), Piece.BLACK);
+	}
+	
+	@Test
+	public final void testGetPlayer1() {
+		m.placePiece(3, 2);
+		m.changeTurn();
+		assertEquals("players not equal", m.getPlayer(), Piece.WHITE);
 	}
 	
 	@Test
@@ -94,11 +101,12 @@ public class TestModel {
 	}
 	
 	@Test
-	public final void testCountPieces_1() {
+	public final void testCountPieces1() {
 		int[] arr = new int[3];
 		arr[0] = 59;
 		arr[1] = 4;
 		arr[2] = 1;	
+		m.placePiece(3, 2);
 		assertArrayEquals("results array not equal", m.countPieces(), arr);
 	}
 }

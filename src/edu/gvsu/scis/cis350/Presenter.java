@@ -35,7 +35,10 @@ public class Presenter {
 		view = v;
 		while (!model.isGameOver()) {
 			nextTurn();
-		}
+		} 
+		JOptionPane pane = new JOptionPane();
+		JOptionPane.showMessageDialog(pane, model.getPlayer() 
+				+ " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -77,7 +80,12 @@ public class Presenter {
 	 * @return This returns true if the piece was placed, return false otherwise
 	 */
 	private static boolean placePiece(final int x, final int y) {
-		return model.placePiece(x, y);
+		if (model.placePiece(x, y)){
+			return true;
+		} else {
+			return false;
+			
+		}
 	}
 
 	/**
@@ -85,18 +93,17 @@ public class Presenter {
 	 * confirms that the input is valid.
 	 */
 	public static void getInput() {
-		System.out.print("Input x value");
+		System.out.print(model.getPlayer() + " Input x value");
 		int x = s.nextInt();
 		x--;
-		System.out.print("Input y value");
+		System.out.print(model.getPlayer() + " Input y value");
 		int y = s.nextInt();
 		y--;
-		while (!placePiece(y, x)) {
-			System.out.print("Please enter a valid piece location");
-			x = s.nextInt();
-			x--;
-			y = s.nextInt();
-			y--;
+		if (placePiece(y, x)) {
+			return;
+		} else { 
+			System.out.println("Invalid piece location.");
+			getInput();
 		}
 	}
 
@@ -106,15 +113,9 @@ public class Presenter {
 	 * @return This returns the next player
 	 */
 	public static Piece nextTurn() {
-		if (!model.isGameOver()) {
-			getInput();
-			model.print();
-			model.changeTurn();	
-		} else {
-			JOptionPane pane = new JOptionPane();
-			JOptionPane.showMessageDialog(pane, model.getPlayer() 
-					+ " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
-		}
+		model.print();
+		getInput();
+		model.changeTurn();	
 		return model.getPlayer();
 	}
 }

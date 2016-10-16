@@ -50,10 +50,10 @@ public class Model {
 					System.out.print("{0}" + " ");
 				}
 				if (board[j][i] == Piece.BLACK) {
-					System.out.print("{1}" + " ");
+					System.out.print("{B}" + " ");
 				}
 				if (board[j][i] == Piece.WHITE) {
-					System.out.print("{2}" + " ");
+					System.out.print("{W}" + " ");
 				}
 			}
 			System.out.println();
