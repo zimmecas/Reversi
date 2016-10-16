@@ -15,25 +15,26 @@ public class TestModel {
 	}
 
 	@Test
-	public final void testModel() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public final void testPrint() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public final void testMakeBoard() {
-		fail("Not yet implemented");
+		Piece[][] p = new Piece[8][8];
+		assertArrayEquals("initial boards not equal", p, m.makeBoard());
 	}
 
 	@Test
 	public final void testFillBoard() {
-		fail("Not yet implemented");
+		Piece[][] p = m.makeBoard();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				p[j][i] = Piece.EMPTY;
+			}
+		}
+		p[4][3] = Piece.BLACK;
+		p[3][4] = Piece.BLACK;
+		p[3][3] = Piece.WHITE;
+		p[4][4] = Piece.WHITE;	
+		assertArrayEquals("boards not equal", p, m.getBoard());
 	}
-
+	
 	@Test
 	public final void testPlacePiece() {
 		fail("Not yet implemented");
@@ -64,7 +65,13 @@ public class TestModel {
 
 	@Test
 	public final void testIsGameOver() {
-		fail("Not yet implemented");
+		m.makeEndGame1();
+		assertTrue(m.isGameOver());
+	}
+	
+	@Test
+	public final void testIsGameOver2() {
+		assertFalse(m.isGameOver());
 	}
 
 	@Test
@@ -82,18 +89,21 @@ public class TestModel {
 	@Test
 	public final void testAnyMovesLeft2() {
 		m.makeEndGame1();
-		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), 
+				false);
 	}
 	
 	@Test
 	public final void testAnyMovesLeft3() {
 		m.makeEndGame2();
-		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), 
+				false);
 	}
 	@Test
 	public final void testAnyMovesLeft4() {
 		m.makeEndGame3();
-		assertEquals("Should be not be any moves left", m.anyMovesLeft(), false);
+		assertEquals("Should be not be any moves left", m.anyMovesLeft(), 
+				false);
 	}
 
 	@Test

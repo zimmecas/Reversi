@@ -23,7 +23,7 @@ public class Presenter {
 	/**
 	 * This variable is used for scanning in user input.
 	 */
-	private static Scanner s = new Scanner(System.in);
+	private static Scanner s = new Scanner(System.in, "UTF-8");
 	
 	/**
 	 * The Presenter constructor.

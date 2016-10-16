@@ -59,15 +59,15 @@ public class Model {
 			System.out.println();
 		}
 		int[] results = countPieces();
-		System.out.println("B: " + results[1] + "\t" + "\t" + "\t" + "     " +
-		"W: " + results[2]);
+		System.out.println("B: " + results[1] + "\t" + "\t" + "\t" + "     " 
+		+ "W: " + results[2]);
 	}
 
 	/**
 	 * This method makes a new height x width board.
 	 */
-	public final void makeBoard() {
-		board = new Piece[HEIGHT][WIDTH];
+	public final Piece[][] makeBoard() {
+		return board = new Piece[HEIGHT][WIDTH];
 	}
 
 	/**
@@ -276,10 +276,10 @@ public class Model {
 	}
 	
 	/**
-	 * Makes board into a configuration where white wins, there are no more valid moves 
-	 * and there are empty spaces
+	 * Makes board into a configuration where white wins, there are no more 
+	 * valid moves and there are empty spaces.
 	 */
-	public void makeEndGame1(){
+	public final void makeEndGame1() {
 		for (int h = 0; h < HEIGHT; h++) {
 			for (int w = 0; w < WIDTH; w++) {
 				board[h][w] = Piece.WHITE;
@@ -294,9 +294,9 @@ public class Model {
 	}
 	
 	/**
-	 * Makes board where all pieces are black (not actually achievable.)
+	 * Makes board where all pieces are black (not actually achievable).
 	 */
-	public void makeEndGame2(){
+	public final void makeEndGame2() {
 		for (int h = 0; h < HEIGHT; h++) {
 			for (int w = 0; w < WIDTH; w++) {
 				board[h][w] = Piece.BLACK;
@@ -306,18 +306,26 @@ public class Model {
 	
 	/**
 	 * Makes board where half is black and half is white
-	 * (probably not actually achievable in this configuration.)
+	 * (probably not actually achievable in this configuration).
 	 */
-	public void makeEndGame3(){
+	public final void makeEndGame3() {
 		for (int h = 0; h < HEIGHT; h++) {
-			for (int w = 0; w < WIDTH/2; w++) {
+			for (int w = 0; w < WIDTH / 2; w++) {
 				board[h][w] = Piece.BLACK;
 			}
 		}
 		for (int h = 0; h < HEIGHT; h++) {
-			for (int w = WIDTH/2; w < WIDTH; w++) {
+			for (int w = WIDTH / 2; w < WIDTH; w++) {
 				board[h][w] = Piece.WHITE;
 			}
 		}
+	}
+	
+	public final Piece[][] getBoard() {
+		return board;
+	}
+	
+	public final void setBoard(Piece[][] b) {
+		board = b;
 	}
 }
