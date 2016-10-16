@@ -269,9 +269,6 @@ public class Model {
 				}
 			}
 		}
-		System.out.print(results[0]);
-		System.out.print(results[1]);
-		System.out.print(results[2]);
 		return results;
 	}
 }

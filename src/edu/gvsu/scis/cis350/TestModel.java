@@ -90,9 +90,15 @@ public class TestModel {
 		arr[0] = 60;
 		arr[1] = 2;
 		arr[2] = 2;		
-		System.out.print(arr[0]);
-		System.out.print(arr[1]);
-		System.out.print(arr[2]);
+		assertArrayEquals("results array not equal", m.countPieces(), arr);
+	}
+	
+	@Test
+	public final void testCountPieces_1() {
+		int[] arr = new int[3];
+		arr[0] = 59;
+		arr[1] = 4;
+		arr[2] = 1;	
 		assertArrayEquals("results array not equal", m.countPieces(), arr);
 	}
 }
