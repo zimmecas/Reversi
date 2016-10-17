@@ -185,7 +185,7 @@ public class Model {
 		int xDisp = xDir;
 		while (board[y + yDisp][x + xDisp] == player.flipPiece()
 				&& y + yDisp >= 0 && y + yDisp < HEIGHT  
-				&& x + xDisp >= 0 && x + xDisp < WIDTH ) {
+				&& x + xDisp >= 0 && x + xDisp < WIDTH) {
 			board[y + yDisp][x + xDisp] = player;
 			yDisp += yDir;
 			xDisp += xDir;
