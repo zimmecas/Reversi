@@ -33,6 +33,8 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
+		System.out.println("Enter 'Quit' if you want to end the game "
+				+ "or 'Restart' if you want to restart the game.");
 		while (!model.isGameOver()) {
 			nextTurn();
 		} 
@@ -91,19 +93,47 @@ public class Presenter {
 	 * This method receives the user's input and 
 	 * confirms that the input is valid.
 	 */
-	public static void getInput() {
+	public final void getInput() {
 		System.out.print(model.getPlayer() + " Input x value");
-		int x = s.nextInt();
+		String input = s.next();
+		
+		int x = checkInput(input);
 		x--;
+
 		System.out.print(model.getPlayer() + " Input y value");
-		int y = s.nextInt();
+		input = s.next();
+		int y = checkInput(input);
 		y--;
-		if (placePiece(y, x)) {
-			return;
-		} else { 
+		if ((x < 0 || x > 7) || (y < 0 || y > 7)) { //If the location is not valid
 			System.out.println("Invalid piece location.");
 			getInput();
+		} else if (placePiece(y, x)) {
+			return;
+		} else { //If the move is not valid
+			System.out.println("Invalid move.");
+			getInput();
 		}
+	}
+
+	public final int checkInput(final String input) {
+		if (input.equals("Quit") || input.equals("quit")) {
+			System.exit(0); 
+		}
+		/*else if (input.equals("Restart") || input.equals("restart")) {
+			Model m = new Model();
+			setModel(m);
+			nextTurn();			
+		}*/
+		else{
+			int z = Integer.parseInt(input);
+			if (z >= 1 && z <= 8) { //1-8
+				return z;
+			}
+			else { //anything else
+				return 100; //this is a flag to catch the invalid input
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -111,7 +141,7 @@ public class Presenter {
 	 * If it is not game over, the turn switches to the next player.
 	 * @return This returns the next player
 	 */
-	public static Piece nextTurn() {
+	public final Piece nextTurn() {
 		model.print();
 		getInput();
 		model.changeTurn();	
