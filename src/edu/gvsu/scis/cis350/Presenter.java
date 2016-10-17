@@ -33,14 +33,27 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
+		int whiteWins = 0;
+		int blackWins = 0;
 		System.out.println("Enter 'Quit' if you want to end the game "
 				+ "or 'Restart' if you want to restart the game.");
-		while (!model.isGameOver()) {
-			nextTurn();
-		} 
-		JOptionPane pane = new JOptionPane();
-		JOptionPane.showMessageDialog(pane, model.getPlayer() 
-				+ " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
+		while (true) {
+			while (!model.isGameOver()) {
+				nextTurn();
+			} 
+			JOptionPane pane = new JOptionPane();
+			JOptionPane.showMessageDialog(pane, model.getPlayer() 
+					+ " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
+			if (model.getPlayer() == Piece.BLACK) {
+				blackWins++;
+			} else if (model.getPlayer() == Piece.WHITE) {
+				whiteWins++;
+			}
+			model = m;
+			System.out.println("Current wins:");
+			System.out.println("Black: " + blackWins);
+			System.out.println("White: " + whiteWins);
+		}
 	}
 
 	/**
@@ -82,11 +95,7 @@ public class Presenter {
 	 * @return This returns true if the piece was placed, return false otherwise
 	 */
 	private static boolean placePiece(final int x, final int y) {
-		if (model.placePiece(x, y)) {
-			return true;
-		} else {
-			return false;
-		}
+		return model.placePiece(x, y);
 	}
 
 	/**
@@ -120,17 +129,19 @@ public class Presenter {
 		}
 		y--;
 		
-		if ((x < 0 || x > 7) || (y < 0 || y > 7)) { //If the location is not valid
-			System.out.println("Invalid piece location.");
-			getInput();
-		} else if (placePiece(y, x)) {
-			return;
+		if (placePiece(y, x)) {
+				return;
 		} else { //If the move is not valid
-			System.out.println("Invalid move.");
-			getInput();
+				System.out.println("Invalid move.");
+				getInput();
 		}
 	}
 
+	/**
+	 * This method checks the user input to make sure that the input is valid.
+	 * @param input This is the input from the user
+	 * @return int Return the x or y value that the user inputed
+	 */
 	public final int checkInput(final String input) {
 		if (input.toLowerCase().equals("quit")) {
 			System.exit(0); 
@@ -144,7 +155,9 @@ public class Presenter {
 			} catch (NumberFormatException e) {
 				System.out.println("Not a valid input");
 				return z;
-			} if (z >= 1 && z <= 8) { //1-8
+			}
+			int size = model.getBoardSize();
+			if (z >= 1 && z <= size) { //1-8
 				return z;
 			}
 		}

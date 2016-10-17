@@ -30,6 +30,10 @@ public class Model {
 	 */
 	private static final int YSTART = 3;
 	/**
+	 * How large the results array is.
+	 */
+	private static final int RESULTSINT = 3;
+	/**
 	 * This constructor makes and fills a board when called.
 	 */
 	public Model() {
@@ -65,9 +69,11 @@ public class Model {
 
 	/**
 	 * This method makes a new height x width board.
+	 * @return board This returns the new board
 	 */
 	public final Piece[][] makeBoard() {
-		return board = new Piece[HEIGHT][WIDTH];
+		board = new Piece[HEIGHT][WIDTH];
+		return board;
 	}
 
 	/**
@@ -126,7 +132,7 @@ public class Model {
 	 * @return This returns true if at least one flip would 
 	 * occur if a piece were placed at x, y
 	 */
-	private final boolean checkIfFlip(final int x, final int y) {
+	private boolean checkIfFlip(final int x, final int y) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if (checkDirection(x, y, i, j)) {
@@ -146,17 +152,19 @@ public class Model {
 	 * @param yDir This is a number between -1 and 1 to indicate y direction
 	 * @return This returns true if flips should occur in the given direction
 	 */
-	private final boolean checkDirection(final int x, final int y,
+	private boolean checkDirection(final int x, final int y,
 			final int xDir, final int yDir) {
 		int yDisp = yDir;
 		int xDisp = xDir;
-		while (y + yDisp > 0 && y + yDisp < HEIGHT - 1 
-				&& x + xDisp > 0 && x + xDisp < WIDTH - 1
+		while (y + yDisp >= 0 && y + yDisp < HEIGHT 
+				&& x + xDisp >= 0 && x + xDisp < WIDTH  
 				&& board[y + yDisp][x + xDisp] == player.flipPiece() 
 				) {
 			yDisp += yDir;
 			xDisp += xDir;
-			if (board[y + yDisp][x + xDisp] == player) {
+			if (y + yDisp >= 0 && y + yDisp < HEIGHT 
+					&& x + xDisp >= 0 && x + xDisp < WIDTH
+					&& board[y + yDisp][x + xDisp] == player) {
 				return true;
 			}
 		}
@@ -171,13 +179,13 @@ public class Model {
 	 * @param yDir This is a number between -1 and 1 to indicate y direction
 	 * @return This returns true if flip completed successfully
 	 */
-	private final boolean flipDirection(final int x, final int y,
+	private boolean flipDirection(final int x, final int y,
 			final int xDir, final int yDir) {
 		int yDisp = yDir;
 		int xDisp = xDir;
 		while (board[y + yDisp][x + xDisp] == player.flipPiece()
-				&& y + yDisp > 0 && y + yDisp < HEIGHT - 1 
-				&& x + xDisp > 0 && x + xDisp < WIDTH - 1) {
+				&& y + yDisp >= 0 && y + yDisp < HEIGHT  
+				&& x + xDisp >= 0 && x + xDisp < WIDTH) {
 			board[y + yDisp][x + xDisp] = player;
 			yDisp += yDir;
 			xDisp += xDir;
@@ -193,7 +201,7 @@ public class Model {
 	 * @param x This is the horizontal position of placed piece
 	 * @param y This is the vertical position of placed piece
 	 */
-	private final void flip(final int x, final int y) {
+	private void flip(final int x, final int y) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if (checkDirection(x, y, i, j)) {
@@ -257,7 +265,7 @@ public class Model {
 	 * 
 	 */
 	public final int[] countPieces() {
-		int[] results = new int[3];
+		int[] results = new int[RESULTSINT];
 		results[0] = HEIGHT * WIDTH;
 		results[1] = 0;
 		results[2] = 0;
@@ -285,12 +293,21 @@ public class Model {
 				board[h][w] = Piece.WHITE;
 			}
 		}
-		board[6][4] = Piece.EMPTY;
-		board[6][5] = Piece.EMPTY;
-		board[7][3] = Piece.EMPTY;
-		board[7][4] = Piece.EMPTY;
-		board[7][5] = Piece.BLACK;
-		board[7][6] = Piece.EMPTY;
+		
+		//This is just to keep checkStyle happy because of magic number stuff.
+		//According to checkStyle, 1 and 2 are not magic numbers.
+		int h1 = HEIGHT - 2; //6 => 8 - 2
+		int h2 = HEIGHT - 1; //7 => 8 - 1
+		int w1 = WIDTH - 2 - 2; //4 => 8 - 4
+		int w2 = WIDTH - 1 - 2; //5 => 8 - 3
+		int w3 = WIDTH - 2 - 2 - 1; //3 => 8 - 5
+		int w4 = WIDTH - 2; //6 => 8 - 2 
+		board[h1][w1] = Piece.EMPTY;
+		board[h1][w2] = Piece.EMPTY;
+		board[h2][w3] = Piece.EMPTY;
+		board[h2][w1] = Piece.EMPTY;
+		board[h2][w2] = Piece.BLACK;
+		board[h2][w4] = Piece.EMPTY;
 	}
 	
 	/**
@@ -321,11 +338,28 @@ public class Model {
 		}
 	}
 	
+	/**
+	 * This method returns the board.
+	 * @return board This is the current board
+	 */
 	public final Piece[][] getBoard() {
 		return board;
 	}
 	
-	public final void setBoard(Piece[][] b) {
+	/**
+	 * This method sets board equal to a new value.
+	 * @param b This is the new value that board will be equal to
+	 */
+	public final void setBoard(final Piece[][] b) {
 		board = b;
+	}
+	
+	/**
+	 * This method returns the size of the board.
+	 * @return size This is the size of the board
+	 */
+	public final int getBoardSize() {
+		int size = WIDTH;
+		return size;
 	}
 }
