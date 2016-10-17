@@ -47,7 +47,7 @@ public class Model {
 			System.out.print((i + 1) + "|");
 			for (int j = 0; j < WIDTH; j++) {
 				if (board[j][i] == Piece.EMPTY) {
-					System.out.print("{0}" + " ");
+					System.out.print("{ }" + " ");
 				}
 				if (board[j][i] == Piece.BLACK) {
 					System.out.print("{B}" + " ");
