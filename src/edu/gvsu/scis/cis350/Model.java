@@ -240,6 +240,7 @@ public class Model {
 				}
 			}
 		}
+		changeTurn();
 		return false;
 	}
 	/**

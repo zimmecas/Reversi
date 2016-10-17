@@ -115,6 +115,10 @@ public class Presenter {
 				model.changeTurn();
 				return;
 			}
+			if (x == 100) {
+				System.out.println("Please enter a number between 1 and 8");
+				x = -1;
+			}
 		}
 		x--;
 		
@@ -125,6 +129,10 @@ public class Presenter {
 			if (y == -2) {
 				model.changeTurn();
 				return;
+			}
+			if (y == 100) {
+				System.out.println("Please enter a number between 1 and 8");
+				y = -1;
 			}
 		}
 		y--;
@@ -161,7 +169,7 @@ public class Presenter {
 				return z;
 			}
 		}
-		return 0;
+		return 100;
 	}
 
 	/**
