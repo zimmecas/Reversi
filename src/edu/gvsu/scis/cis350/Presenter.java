@@ -94,16 +94,32 @@ public class Presenter {
 	 * confirms that the input is valid.
 	 */
 	public final void getInput() {
-		System.out.print(model.getPlayer() + " Input x value");
-		String input = s.next();
+		int x = -1;
+		int y = -1;
+		String input;
 		
-		int x = checkInput(input);
+		while (x == -1) {
+			System.out.print(model.getPlayer() + " Input x value");
+			input = s.next();
+			x = checkInput(input);
+			if (x == -2) {
+				model.changeTurn();
+				return;
+			}
+		}
 		x--;
-
-		System.out.print(model.getPlayer() + " Input y value");
-		input = s.next();
-		int y = checkInput(input);
+		
+		while (y == -1) {
+			System.out.print(model.getPlayer() + " Input y value");
+			input = s.next();
+			y = checkInput(input);
+			if (y == -2) {
+				model.changeTurn();
+				return;
+			}
+		}
 		y--;
+		
 		if ((x < 0 || x > 7) || (y < 0 || y > 7)) { //If the location is not valid
 			System.out.println("Invalid piece location.");
 			getInput();
@@ -116,21 +132,20 @@ public class Presenter {
 	}
 
 	public final int checkInput(final String input) {
-		if (input.equals("Quit") || input.equals("quit")) {
+		if (input.toLowerCase().equals("quit")) {
 			System.exit(0); 
-		}
-		/*else if (input.equals("Restart") || input.equals("restart")) {
-			Model m = new Model();
-			setModel(m);
-			nextTurn();			
-		}*/
-		else{
-			int z = Integer.parseInt(input);
-			if (z >= 1 && z <= 8) { //1-8
+		} else if (input.toLowerCase().equals("restart")) {
+			model = new Model();
+			return -2;
+		} else {
+			int z = -1;
+			try {
+				z = Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Not a valid input");
 				return z;
-			}
-			else { //anything else
-				return 100; //this is a flag to catch the invalid input
+			} if (z >= 1 && z <= 8) { //1-8
+				return z;
 			}
 		}
 		return 0;
