@@ -12,7 +12,7 @@ public class Presenter {
 	/**
 	 * This variable is used to communicate with the Model class.
 	 */
-	private static Model model;
+	private Model model;
 	
 	/**
 	 * This variable is used to communicate with the View class.
@@ -39,6 +39,7 @@ public class Presenter {
 		view = v;
 		int whiteWins = 0;
 		int blackWins = 0;
+		model.makeEndGame3();
 		System.out.println("Enter 'Quit' if you want to end the game "
 				+ "or 'Restart' if you want to restart the game.");
 		while (true) {
@@ -97,7 +98,7 @@ public class Presenter {
 	 * @param y This is the y position of where to place the piece
 	 * @return This returns true if the piece was placed, return false otherwise
 	 */
-	private static boolean placePiece(final int x, final int y) {
+	private boolean placePiece(final int x, final int y) {
 		return model.placePiece(x, y);
 	}
 
