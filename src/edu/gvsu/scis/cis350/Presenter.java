@@ -1,7 +1,6 @@
 package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 
 /**
  * This class communicates between the View and Model to run the game.
@@ -26,6 +25,11 @@ public class Presenter {
 	private static Scanner s = new Scanner(System.in, "UTF-8");
 	
 	/**
+	 * Used to help catch invalid inputs.
+	 */
+	private static final int FLAG = -2;
+	
+	/**
 	 * The Presenter constructor.
 	 * @param m This is the initial value of model
 	 * @param v This is the initial value of view
@@ -41,15 +45,14 @@ public class Presenter {
 			while (!model.isGameOver()) {
 				nextTurn();
 			} 
-			JOptionPane pane = new JOptionPane();
-			JOptionPane.showMessageDialog(pane, model.getPlayer() 
-					+ " wins!", "Reversi", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println(model.getPlayer() + " wins!");
+
 			if (model.getPlayer() == Piece.BLACK) {
 				blackWins++;
 			} else if (model.getPlayer() == Piece.WHITE) {
 				whiteWins++;
 			}
-			model = m;
+			model = new Model();
 			System.out.println("Current wins:");
 			System.out.println("Black: " + blackWins);
 			System.out.println("White: " + whiteWins);
@@ -111,7 +114,7 @@ public class Presenter {
 			System.out.print(model.getPlayer() + " Input x value");
 			input = s.next();
 			x = checkInput(input);
-			if (x == -2) {
+			if (x == FLAG) {
 				model.changeTurn();
 				return;
 			}
@@ -126,7 +129,7 @@ public class Presenter {
 			System.out.print(model.getPlayer() + " Input y value");
 			input = s.next();
 			y = checkInput(input);
-			if (y == -2) {
+			if (y == FLAG) {
 				model.changeTurn();
 				return;
 			}
@@ -155,7 +158,7 @@ public class Presenter {
 			System.exit(0); 
 		} else if (input.toLowerCase().equals("restart")) {
 			model = new Model();
-			return -2;
+			return FLAG;
 		} else {
 			int z = -1;
 			try {
