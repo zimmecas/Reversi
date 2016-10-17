@@ -122,7 +122,7 @@ public class TestModel {
 	public final void testChangeTurn2() {
 		m.placePiece(3, 2);
 		m.changeTurn();
-		assertEquals("turn did not change", m.getPlayer(), Piece.WHITE);;
+		assertEquals("turn did not change", m.getPlayer(), Piece.WHITE);
 	}
 
 	@Test
@@ -154,5 +154,10 @@ public class TestModel {
 		arr[2] = 1;	
 		m.placePiece(3, 2);
 		assertArrayEquals("results array not equal", m.countPieces(), arr);
+	}
+	
+	@Test
+	public final void testGetBoardSize() {
+		assertEquals("board width/height should equal 8", m.getBoardSize(), 8);
 	}
 }
