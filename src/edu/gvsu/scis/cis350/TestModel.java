@@ -36,8 +36,12 @@ public class TestModel {
 	}
 	
 	@Test
-	public final void testPlacePiece() {
-		fail("Not yet implemented");
+	public final void testPlacePiece1() {
+		assertEquals("Can place a piece at 3,2", m.placePiece(3,2), true);
+	}
+	@Test
+	public final void testPlacePiece2() {
+		assertEquals("Cannot place piece at 4,4", m.placePiece(4,4), false);
 	}
 
 	@Test
@@ -107,8 +111,18 @@ public class TestModel {
 	}
 
 	@Test
-	public final void testChangeTurn() {
-		fail("Not yet implemented");
+	public final void testChangeTurn1() {
+		m.placePiece(3, 2);
+		m.changeTurn(); //now white's turn
+		m.placePiece(2, 4);
+		m.changeTurn(); //now black's turn
+		assertEquals("turn did not change", m.getPlayer(), Piece.BLACK);
+	}
+	@Test
+	public final void testChangeTurn2() {
+		m.placePiece(3, 2);
+		m.changeTurn();
+		assertEquals("turn did not change", m.getPlayer(), Piece.WHITE);;
 	}
 
 	@Test
