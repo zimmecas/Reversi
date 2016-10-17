@@ -150,13 +150,15 @@ public class Model {
 			final int xDir, final int yDir) {
 		int yDisp = yDir;
 		int xDisp = xDir;
-		while (y + yDisp > 0 && y + yDisp < HEIGHT - 1 
-				&& x + xDisp > 0 && x + xDisp < WIDTH - 1
+		while (y + yDisp >= 0 && y + yDisp < HEIGHT 
+				&& x + xDisp >= 0 && x + xDisp < WIDTH  
 				&& board[y + yDisp][x + xDisp] == player.flipPiece() 
 				) {
 			yDisp += yDir;
 			xDisp += xDir;
-			if (board[y + yDisp][x + xDisp] == player) {
+			if (y + yDisp >= 0 && y + yDisp < HEIGHT 
+					&& x + xDisp >= 0 && x + xDisp < WIDTH
+					&& board[y + yDisp][x + xDisp] == player) {
 				return true;
 			}
 		}
@@ -176,8 +178,8 @@ public class Model {
 		int yDisp = yDir;
 		int xDisp = xDir;
 		while (board[y + yDisp][x + xDisp] == player.flipPiece()
-				&& y + yDisp > 0 && y + yDisp < HEIGHT - 1 
-				&& x + xDisp > 0 && x + xDisp < WIDTH - 1) {
+				&& y + yDisp >= 0 && y + yDisp < HEIGHT  
+				&& x + xDisp >= 0 && x + xDisp < WIDTH ) {
 			board[y + yDisp][x + xDisp] = player;
 			yDisp += yDir;
 			xDisp += xDir;
