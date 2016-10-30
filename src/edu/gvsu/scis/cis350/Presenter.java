@@ -30,6 +30,11 @@ public class Presenter {
 	private static final int FLAG = -2;
 	
 	/**
+	 * Indicates if player vs player or player vs computer
+	 */
+	private boolean pvp = true;
+	
+	/**
 	 * The Presenter constructor.
 	 * @param m This is the initial value of model
 	 * @param v This is the initial value of view
@@ -39,24 +44,29 @@ public class Presenter {
 		view = v;
 		int whiteWins = 0;
 		int blackWins = 0;
-		model.makeEndGame3();
+		int ties = 0;
 		System.out.println("Enter 'Quit' if you want to end the game "
 				+ "or 'Restart' if you want to restart the game.");
 		while (true) {
 			while (!model.isGameOver()) {
 				nextTurn();
 			} 
-			System.out.println(model.getPlayer() + " wins!");
-
-			if (model.getPlayer() == Piece.BLACK) {
-				blackWins++;
-			} else if (model.getPlayer() == Piece.WHITE) {
+			if (model.countPieces()[1] > model.countPieces()[2]) {
+			System.out.println("Black wins!");
+			blackWins++;
+			} else if (model.countPieces()[2] > model.countPieces()[1]) {
+				System.out.println("White wins!");
 				whiteWins++;
+			} else {
+				System.out.println("Tie!");
+				ties++;
 			}
+
 			model = new Model();
 			System.out.println("Current wins:");
 			System.out.println("Black: " + blackWins);
 			System.out.println("White: " + whiteWins);
+			System.out.println("Ties: " + ties);
 		}
 	}
 
@@ -142,6 +152,7 @@ public class Presenter {
 		y--;
 		
 		if (placePiece(y, x)) {
+			
 				return;
 		} else { //If the move is not valid
 				System.out.println("Invalid move.");
@@ -159,6 +170,17 @@ public class Presenter {
 			System.exit(0); 
 		} else if (input.toLowerCase().equals("restart")) {
 			model = new Model();
+			return FLAG;
+		} else if (input.toLowerCase().equals("pvp")) {
+			pvp = true;
+			model = new Model();
+			return FLAG;
+		} else if (input.toLowerCase().equals("pve")) {
+			model = new Model();
+			pvp = false;
+			model.print();
+			getInput();
+			model.changeTurn();	
 			return FLAG;
 		} else {
 			int z = -1;
@@ -185,6 +207,11 @@ public class Presenter {
 		model.print();
 		getInput();
 		model.changeTurn();	
+		if (!pvp) {
+			model.print();
+			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
+			model.changeTurn();
+		}
 		return model.getPlayer();
 	}
 }
