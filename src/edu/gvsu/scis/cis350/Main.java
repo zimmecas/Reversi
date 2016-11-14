@@ -19,8 +19,8 @@ public final class Main {
 	 * @param args This is the default parameter for this method
 	 */
 	public static void main(final String[] args) {
-		View view = new View();
 		Model model = new Model();
+		View view = new View();
 		new Presenter(model, view);	
 	}
 }

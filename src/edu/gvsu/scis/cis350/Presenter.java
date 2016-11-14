@@ -1,6 +1,8 @@
 package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * This class communicates between the View and Model to run the game.
@@ -13,7 +15,7 @@ public class Presenter {
 	 * This variable is used to communicate with the Model class.
 	 */
 	private static Model model;
-	
+
 	/**
 	 * This variable is used to communicate with the View class.
 	 */
@@ -23,12 +25,12 @@ public class Presenter {
 	 * This variable is used for scanning in user input.
 	 */
 	private static Scanner s = new Scanner(System.in, "UTF-8");
-	
+
 	/**
 	 * Used to help catch invalid inputs.
 	 */
 	private static final int FLAG = -2;
-	
+
 	/**
 	 * The Presenter constructor.
 	 * @param m This is the initial value of model
@@ -37,6 +39,28 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
+
+		//Problem here
+		view.addBoardActionListeners(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//make changes to the board then update board
+				//nextTurnGUI(row, col); //how to get the row and col of the clicked button???
+				view.updateBoard(model.getBoard());
+			}
+		});
+
+		view.addQuitActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0); 
+			}
+		});
+
+		view.addNewGameActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				newGame();
+			}
+		});
+
 		int whiteWins = 0;
 		int blackWins = 0;
 		System.out.println("Enter 'Quit' if you want to end the game "
@@ -109,7 +133,7 @@ public class Presenter {
 		int x = -1;
 		int y = -1;
 		String input;
-		
+
 		while (x == -1) {
 			System.out.print(model.getPlayer() + " Input x value");
 			input = s.next();
@@ -124,7 +148,7 @@ public class Presenter {
 			}
 		}
 		x--;
-		
+
 		while (y == -1) {
 			System.out.print(model.getPlayer() + " Input y value");
 			input = s.next();
@@ -139,12 +163,12 @@ public class Presenter {
 			}
 		}
 		y--;
-		
+
 		if (placePiece(y, x)) {
-				return;
+			return;
 		} else { //If the move is not valid
-				System.out.println("Invalid move.");
-				getInput();
+			System.out.println("Invalid move.");
+			getInput();
 		}
 	}
 
@@ -175,6 +199,12 @@ public class Presenter {
 		return 100;
 	}
 
+	public void newGame() {
+		model = new Model();
+		//model.changeTurn(); need this??
+	}
+
+
 	/**
 	 * This method checks for a game over.
 	 * If it is not game over, the turn switches to the next player.
@@ -185,5 +215,15 @@ public class Presenter {
 		getInput();
 		model.changeTurn();	
 		return model.getPlayer();
+	}
+
+	public void nextTurnGUI(int row, int col){
+		if (placePiece(row, col)) { //y,x
+			model.changeTurn();
+		} else { //If the move is not valid
+			System.out.println("Invalid move.");
+			//getInput(); do something else. getInput() needs text input so can't use that
+		}
+
 	}
 }

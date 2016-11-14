@@ -91,6 +91,8 @@ public class Model {
 			board[YSTART + 1][XSTART] = Piece.BLACK;
 		}				
 	}
+	
+	
 
 	/**
 	 * This method checks if the player can place a piece
