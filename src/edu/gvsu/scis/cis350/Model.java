@@ -71,7 +71,7 @@ public class Model {
 	 * This method makes a new height x width board.
 	 * @return board This returns the new board
 	 */
-	public final Piece[][] makeBoard() {
+	private Piece[][] makeBoard() {
 		board = new Piece[HEIGHT][WIDTH];
 		return board;
 	}
@@ -171,6 +171,67 @@ public class Model {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Determines the place that will result in the current player 
+	 * flipping the most pieces.
+	 * @return and array containing the number of flips, 
+	 * the x position and the y position of the move.
+	 */
+
+	public final int [] bestMove() {
+		int [] max = new int[3];
+		int prevMax = 0;
+		for (int k = 0; k < HEIGHT; k++) {
+			for (int h = 0; h < WIDTH; h++) {
+				max[0] = 0;
+				if (isValidMove(k, h)) {
+					for (int i = -1; i < 2; i++) {
+						for (int j = -1; j < 2; j++) {
+							max[0] = checkBestMove(k, h, i, j) + max[0];
+						}
+					}
+					if (prevMax < max[0]) {
+					prevMax = max[0];
+					max[1] = k;
+					max[2] = h;
+					
+					}
+				}
+			}
+		}
+		max[0] = prevMax;
+		return max;
+	}
+	
+	/**
+	 * Counts the number of pieces flipped in one given direction.
+	 * @param x X location of the potential piece.
+	 * @param y Y location of the potential piece.
+	 * @param xDir X direction of the potential flip.
+	 * @param yDir Y direction of the potential flip.
+	 * @return The number of pieces flipped in the given direction by the piece.
+	 */
+	private int checkBestMove(final int x, final int y,
+			final int xDir, final int yDir) {
+		int yDisp = yDir;
+		int xDisp = xDir;
+		int max = 0;
+		while (y + yDisp >= 0 && y + yDisp < HEIGHT 
+				&& x + xDisp >= 0 && x + xDisp < WIDTH  
+				&& board[y + yDisp][x + xDisp] == player.flipPiece() 
+				) {
+			yDisp += yDir;
+			xDisp += xDir;
+			max++;
+			if (y + yDisp >= 0 && y + yDisp < HEIGHT 
+					&& x + xDisp >= 0 && x + xDisp < WIDTH
+					&& board[y + yDisp][x + xDisp] == player) {
+				return max;
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -346,7 +407,8 @@ public class Model {
 	 * @return board This is the current board
 	 */
 	public final Piece[][] getBoard() {
-		return board;
+		Piece[][] b = board;
+		return b;
 	}
 	
 	/**

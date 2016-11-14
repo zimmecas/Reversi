@@ -14,7 +14,7 @@ public class Presenter {
 	/**
 	 * This variable is used to communicate with the Model class.
 	 */
-	private static Model model;
+	private Model model;
 
 	/**
 	 * This variable is used to communicate with the View class.
@@ -31,6 +31,11 @@ public class Presenter {
 	 */
 	private static final int FLAG = -2;
 
+	/**
+	 * Indicates if player vs player or player vs computer
+	 */
+	private boolean pvp = true;
+	
 	/**
 	 * The Presenter constructor.
 	 * @param m This is the initial value of model
@@ -63,23 +68,29 @@ public class Presenter {
 
 		int whiteWins = 0;
 		int blackWins = 0;
+		int ties = 0;
 		System.out.println("Enter 'Quit' if you want to end the game "
 				+ "or 'Restart' if you want to restart the game.");
 		while (true) {
 			while (!model.isGameOver()) {
 				nextTurn();
 			} 
-			System.out.println(model.getPlayer() + " wins!");
-
-			if (model.getPlayer() == Piece.BLACK) {
-				blackWins++;
-			} else if (model.getPlayer() == Piece.WHITE) {
+			if (model.countPieces()[1] > model.countPieces()[2]) {
+			System.out.println("Black wins!");
+			blackWins++;
+			} else if (model.countPieces()[2] > model.countPieces()[1]) {
+				System.out.println("White wins!");
 				whiteWins++;
+			} else {
+				System.out.println("Tie!");
+				ties++;
 			}
+
 			model = new Model();
 			System.out.println("Current wins:");
 			System.out.println("Black: " + blackWins);
 			System.out.println("White: " + whiteWins);
+			System.out.println("Ties: " + ties);
 		}
 	}
 
@@ -121,7 +132,7 @@ public class Presenter {
 	 * @param y This is the y position of where to place the piece
 	 * @return This returns true if the piece was placed, return false otherwise
 	 */
-	private static boolean placePiece(final int x, final int y) {
+	private boolean placePiece(final int x, final int y) {
 		return model.placePiece(x, y);
 	}
 
@@ -183,6 +194,17 @@ public class Presenter {
 		} else if (input.toLowerCase().equals("restart")) {
 			model = new Model();
 			return FLAG;
+		} else if (input.toLowerCase().equals("pvp")) {
+			pvp = true;
+			model = new Model();
+			return FLAG;
+		} else if (input.toLowerCase().equals("pve")) {
+			model = new Model();
+			pvp = false;
+			model.print();
+			getInput();
+			model.changeTurn();	
+			return FLAG;
 		} else {
 			int z = -1;
 			try {
@@ -214,6 +236,11 @@ public class Presenter {
 		model.print();
 		getInput();
 		model.changeTurn();	
+		if (!pvp) {
+			model.print();
+			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
+			model.changeTurn();
+		}
 		return model.getPlayer();
 	}
 
