@@ -3,8 +3,10 @@ package edu.gvsu.scis.cis350;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 
 
@@ -15,8 +17,9 @@ import javax.swing.*;
  * TODOs: Should have something that says who the current player is.
  * 		  Should have something that says how many pieces each player has.
  * 		  Handle GameOver and updating the winsPanel accordingly.
- *        NewGame is not working yet.
+ *        NewGame is not working yet. --should be working but can't really test yet
  *        Add color changing.
+ *        Ability to decide to play player vs player or player vs comp
  */
 public class View {
 	JFrame frame;
@@ -30,14 +33,14 @@ public class View {
 	JMenuBar menus;
 	JMenu fileMenu;
 	JMenuItem quitItem, newGameItem;
-
+	
 
 	private static final int BSIZE = 8;
 	private int b;
 	private int w;
-
-	private JButton[][] board;
-
+	private JButton[][] reversiBoardSquares = new JButton[BSIZE][BSIZE];
+	private JPanel reversiBoard;
+	private static final String COLS = "ABCDEFGH";
 
 	/**
 	 * This is the constructor of View and assigns everything in the GUI.
@@ -46,29 +49,46 @@ public class View {
 		b = 0;
 		w = 0;
 
-		board = new JButton[BSIZE][BSIZE];
-
 		// establish the frame
 		frame = new JFrame();
 		frame.setPreferredSize(new Dimension(600, 315));
 		frame.setTitle("Reversi");
+		
+		reversiBoard = new JPanel(new GridLayout(0,9));
+		reversiBoard.setBorder(new LineBorder(Color.BLACK));
+		frame.add(reversiBoard);
 
-		// create button panel
+		Insets buttonMargin = new Insets(0,0,0,0);
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
-				board[row][col] = new JButton(" ");
-				board[row][col].setBackground(Color.GREEN);
+				JButton butt = new JButton(" ");
+				butt.setMargin(buttonMargin);
+				ImageIcon icon = new ImageIcon(new BufferedImage(64,64, BufferedImage.TYPE_INT_ARGB));
+				butt.setIcon(icon);
+				butt.setBackground(Color.GREEN);
+				butt.setAlignmentX(col);
+				butt.setAlignmentY(row);
+				
+				reversiBoardSquares[col][row] = butt;
 			}
 		}
-
-		buttonPanel = new JPanel(new GridLayout(BSIZE, BSIZE));
-		for (int row = 0; row < BSIZE; row++) {
-			for (int col = 0; col < BSIZE; col++) {
-				buttonPanel.add(board[row][col]);
+		
+		reversiBoard.add(new JLabel(""));
+		
+		for (int ii = 0; ii < BSIZE; ii++){
+			reversiBoard.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
+		}
+		
+		for (int ii = 0; ii < BSIZE; ii++){
+			for (int jj = 0; jj < BSIZE; jj++){
+				switch (jj) {
+					case 0:
+						reversiBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+					default:
+						reversiBoard.add(reversiBoardSquares[jj][ii]);
+				}
 			}
 		}
-		frame.add(BorderLayout.SOUTH, buttonPanel);
-
 		//This is for a panel to keep track of the wins. 
 		//This was taken directly from a past project so it most likely
 		//needs some changes, but that can be taken care of later.
@@ -80,7 +100,7 @@ public class View {
 		winsPanel.setLayout(new BoxLayout(winsPanel, BoxLayout.Y_AXIS));
 		winsPanel.add(bWins);
 		winsPanel.add(wWins);
-		frame.add(BorderLayout.NORTH, winsPanel); 
+		frame.add(BorderLayout.SOUTH, winsPanel); 
 
 		// set up File menu
 		fileMenu = new JMenu("File");
@@ -97,11 +117,11 @@ public class View {
 	}
 
 	public void addBoardActionListeners(ActionListener a) {
-		for (int row = 0; row < BSIZE; row++) {
-			for (int col = 0; col < BSIZE; col++) {
-				board[row][col].addActionListener(a);
+		for (int ii = 0; ii < BSIZE; ii++){
+			for (int jj = 0; jj < BSIZE; jj++){
+				reversiBoardSquares[jj][ii].addActionListener(a);
 			}
-		} 		
+		}
 	}
 
 	public void addQuitActionListener(ActionListener a){
@@ -116,14 +136,11 @@ public class View {
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
 				if (gameBoard[row][col] == Piece.BLACK) { //if the piece at that position is black, make black
-					board[row][col] = new JButton("B");
-					board[row][col].setBackground(Color.BLACK);
+					reversiBoardSquares[row][col].setBackground(Color.BLACK);
 				} else if (gameBoard[row][col] == Piece.WHITE) { //if the piece at that position is white, make white
-					board[row][col] = new JButton("W");
-					board[row][col].setBackground(Color.WHITE);
+					reversiBoardSquares[row][col].setBackground(Color.WHITE);
 				} else {
-					board[row][col] = new JButton(" ");
-					board[row][col].setBackground(Color.GREEN);
+					reversiBoardSquares[row][col].setBackground(Color.GREEN);
 				}
 			}
 		}

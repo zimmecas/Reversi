@@ -1,6 +1,9 @@
 package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
+
+import javax.swing.JButton;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -47,20 +50,26 @@ public class Presenter {
 
 		//Problem here
 		view.addBoardActionListeners(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				//make changes to the board then update board
 				//nextTurnGUI(row, col); //how to get the row and col of the clicked button???
+				JButton b = (JButton) e.getSource();
+				
+				nextTurnGUI(row, col);
 				view.updateBoard(model.getBoard());
 			}
 		});
 
 		view.addQuitActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0); 
 			}
 		});
 
 		view.addNewGameActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				newGame();
 			}
