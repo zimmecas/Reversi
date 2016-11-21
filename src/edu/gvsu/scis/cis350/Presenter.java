@@ -59,7 +59,7 @@ public class Presenter {
 				int row = view.getButtonRow(e.getSource());
 				int col = view.getButtonCol(e.getSource());
 				System.out.println("Row: "+row+" Col: "+col);
-				nextTurnGUI(row, col);
+				nextTurnGUI(col, row);
 				view.updateBoard(model.getBoard());
 			}
 		});
@@ -258,8 +258,8 @@ public class Presenter {
 		return model.getPlayer();
 	}
 
-	public void nextTurnGUI(int row, int col){
-		if (placePiece(row, col)) { //y,x
+	public void nextTurnGUI(int col, int row){
+		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
 		} else { //If the move is not valid
 			System.out.println("Invalid move.");
