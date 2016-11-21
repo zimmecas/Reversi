@@ -47,6 +47,7 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
+		view.updateBoard(model.getBoard());
 
 		//Problem here
 		view.addBoardActionListeners(new ActionListener() {
@@ -54,8 +55,10 @@ public class Presenter {
 			public void actionPerformed(ActionEvent e) {
 				//make changes to the board then update board
 				//nextTurnGUI(row, col); //how to get the row and col of the clicked button???
-				JButton b = (JButton) e.getSource();
-				
+				//JButton b = (JButton) e.getSource();
+				int row = view.getButtonRow(e.getSource());
+				int col = view.getButtonCol(e.getSource());
+				System.out.println("Row: "+row+" Col: "+col);
 				nextTurnGUI(row, col);
 				view.updateBoard(model.getBoard());
 			}
@@ -72,13 +75,15 @@ public class Presenter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				newGame();
+				view.updateBoard(model.getBoard());
 			}
 		});
 
 		int whiteWins = 0;
 		int blackWins = 0;
 		int ties = 0;
-		System.out.println("Enter 'Quit' if you want to end the game "
+		//With this commented out, the text based version of the game should never start.
+		/*System.out.println("Enter 'Quit' if you want to end the game "
 				+ "or 'Restart' if you want to restart the game.");
 		while (true) {
 			while (!model.isGameOver()) {
@@ -100,7 +105,7 @@ public class Presenter {
 			System.out.println("Black: " + blackWins);
 			System.out.println("White: " + whiteWins);
 			System.out.println("Ties: " + ties);
-		}
+		}*/
 	}
 
 	/**

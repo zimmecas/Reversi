@@ -40,7 +40,7 @@ public class View {
 	private int w;
 	private JButton[][] reversiBoardSquares = new JButton[BSIZE][BSIZE];
 	private JPanel reversiBoard;
-	private static final String COLS = "ABCDEFGH";
+	private static final String COLS = "12345678";
 
 	/**
 	 * This is the constructor of View and assigns everything in the GUI.
@@ -149,6 +149,28 @@ public class View {
 
 	public void updateWinsPanel(){
 		//update the current score after a game ends
+	}
+	
+	public int getButtonRow(Object event){
+		for(int r = 0; r < BSIZE; r++) {
+			for (int c = 0; c < BSIZE; c++) {
+				if (reversiBoardSquares[r][c] == event) { //event is e.getSource()
+					return r;
+				}
+			}
+		}
+		return -2;
+	}
+	
+	public int getButtonCol(Object event){
+		for(int r = 0; r < BSIZE; r++) {
+			for (int c = 0; c < BSIZE; c++) {
+				if (reversiBoardSquares[r][c] == event) { //event is e.getSource()
+					return c;
+				}
+			}
+		}
+		return -2;
 	}
 }
 
