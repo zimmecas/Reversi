@@ -62,8 +62,9 @@ public class Presenter {
 				view.updateWinsPanel(0, 0, true);
 			}
 			newGame();
+			int[] count = model.countPieces();
 			view.updateBoard(model.getBoard());
-			view.updateCurrentPlayer(model.getPlayer());
+			view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 		}
 
 		view.addBoardActionListeners(new ActionListener() {
@@ -72,8 +73,9 @@ public class Presenter {
 				int row = view.getButtonRow(e.getSource());
 				int col = view.getButtonCol(e.getSource());
 				nextTurnGUI(col, row);
+				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
-				view.updateCurrentPlayer(model.getPlayer());
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
 
@@ -88,8 +90,9 @@ public class Presenter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				newGame();
+				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
-				view.updateCurrentPlayer(model.getPlayer());
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
 		
@@ -98,8 +101,9 @@ public class Presenter {
 			public void actionPerformed(ActionEvent e) {
 				pvp = true;
 				newGame();
+				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
-				view.updateCurrentPlayer(model.getPlayer());
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
 		
@@ -108,8 +112,9 @@ public class Presenter {
 			public void actionPerformed(ActionEvent e) {
 				pvp = false;
 				newGame();
+				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
-				view.updateCurrentPlayer(model.getPlayer());
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});	
 	}
@@ -271,8 +276,9 @@ public class Presenter {
 			System.out.println("Invalid move.");
 		}
 		if (!pvp) { //this isn't fully functional
+			int[] count = model.countPieces();
 			view.updateBoard(model.getBoard());
-			view.updateCurrentPlayer(model.getPlayer());
+			view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
 			model.changeTurn();
 		}

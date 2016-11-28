@@ -12,7 +12,7 @@ import javax.swing.border.LineBorder;
  * This class handles the GUI.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
- * TODOs: Should have something that says how many pieces each player has
+ * TODOs: 
  * 		  Isn't detecting game overs or when a player doesn't have a valid move
  * 		  Needs to update the winsPanel accordingly
  * 				-Can't do this until game detects game overs again
@@ -51,6 +51,8 @@ public class View {
 	public View() {
 		b = 0;
 		w = 0;
+		int bPiece = 2;
+		int wPiece = 2;
 
 		// establish the frame
 		frame = new JFrame();
@@ -91,7 +93,8 @@ public class View {
 			}
 		}
 
-		currentPlayer = new JLabel("Current player: " + Piece.BLACK);
+		currentPlayer = new JLabel("Current player: " + Piece.BLACK +"                                "
+				+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
 
 		//panel that shows the current player
 		playerPanel = new JPanel();
@@ -196,11 +199,13 @@ public class View {
 		}
 	}
 	
-	public void updateCurrentPlayer(Object obj){
+	public void updateCurrentPlayer(Piece obj, int bPiece, int wPiece){
 		if (obj == Piece.BLACK) {
-			currentPlayer.setText("Current player: " + Piece.BLACK);
+			currentPlayer.setText("Current player: " + Piece.BLACK +"                                "
+					+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
 		} else if (obj == Piece.WHITE) {
-			currentPlayer.setText("Current player: " + Piece.WHITE);
+			currentPlayer.setText("Current player: " + Piece.WHITE +"                                "
+					+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
 		} else {
 			currentPlayer.setText("Error");
 		}
