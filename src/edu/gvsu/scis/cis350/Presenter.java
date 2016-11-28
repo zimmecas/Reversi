@@ -2,7 +2,6 @@ package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
 
-import javax.swing.JButton;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,7 +37,7 @@ public class Presenter {
 	 * Indicates if player vs player or player vs computer
 	 */
 	private boolean pvp = true;
-	
+
 	/**
 	 * The Presenter constructor.
 	 * @param m This is the initial value of model
@@ -47,20 +46,34 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
-		view.updateBoard(model.getBoard());
 
-		//Problem here
+		view.updateBoard(model.getBoard());
+		
+		if (model.isGameOver()) { //This does not seem to work
+			System.out.println("!!!!Game over detected by Presenter!!!!");
+			if (model.countPieces()[1] > model.countPieces()[2]) {
+				System.out.println("Black wins!");
+				view.updateWinsPanel(1, 0, false);
+			} else if (model.countPieces()[2] > model.countPieces()[1]) {
+				System.out.println("White wins!");
+				view.updateWinsPanel(0, 1, false);
+			} else {
+				System.out.println("Tie!");
+				view.updateWinsPanel(0, 0, true);
+			}
+			newGame();
+			view.updateBoard(model.getBoard());
+			view.updateCurrentPlayer(model.getPlayer());
+		}
+
 		view.addBoardActionListeners(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//make changes to the board then update board
-				//nextTurnGUI(row, col); //how to get the row and col of the clicked button???
-				//JButton b = (JButton) e.getSource();
 				int row = view.getButtonRow(e.getSource());
 				int col = view.getButtonCol(e.getSource());
-				System.out.println("Row: "+row+" Col: "+col);
 				nextTurnGUI(col, row);
 				view.updateBoard(model.getBoard());
+				view.updateCurrentPlayer(model.getPlayer());
 			}
 		});
 
@@ -76,37 +89,31 @@ public class Presenter {
 			public void actionPerformed(ActionEvent e) {
 				newGame();
 				view.updateBoard(model.getBoard());
+				view.updateCurrentPlayer(model.getPlayer());
 			}
 		});
-
-		int whiteWins = 0;
-		int blackWins = 0;
-		int ties = 0;
-		//With this commented out, the text based version of the game should never start.
-		/*System.out.println("Enter 'Quit' if you want to end the game "
-				+ "or 'Restart' if you want to restart the game.");
-		while (true) {
-			while (!model.isGameOver()) {
-				nextTurn();
-			} 
-			if (model.countPieces()[1] > model.countPieces()[2]) {
-			System.out.println("Black wins!");
-			blackWins++;
-			} else if (model.countPieces()[2] > model.countPieces()[1]) {
-				System.out.println("White wins!");
-				whiteWins++;
-			} else {
-				System.out.println("Tie!");
-				ties++;
+		
+		view.addPVPActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pvp = true;
+				newGame();
+				view.updateBoard(model.getBoard());
+				view.updateCurrentPlayer(model.getPlayer());
 			}
-
-			model = new Model();
-			System.out.println("Current wins:");
-			System.out.println("Black: " + blackWins);
-			System.out.println("White: " + whiteWins);
-			System.out.println("Ties: " + ties);
-		}*/
+		});
+		
+		view.addPVCActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pvp = false;
+				newGame();
+				view.updateBoard(model.getBoard());
+				view.updateCurrentPlayer(model.getPlayer());
+			}
+		});	
 	}
+
 
 	/**
 	 * This method returns the view.
@@ -237,7 +244,6 @@ public class Presenter {
 
 	public void newGame() {
 		model = new Model();
-		//model.changeTurn(); need this??
 	}
 
 
@@ -246,7 +252,7 @@ public class Presenter {
 	 * If it is not game over, the turn switches to the next player.
 	 * @return This returns the next player
 	 */
-	public final Piece nextTurn() {
+	public final Piece nextTurn() { //This was for the text based version and will need to be removed before release
 		model.print();
 		getInput();
 		model.changeTurn();	
@@ -263,7 +269,12 @@ public class Presenter {
 			model.changeTurn();
 		} else { //If the move is not valid
 			System.out.println("Invalid move.");
-			//getInput(); do something else. getInput() needs text input so can't use that
+		}
+		if (!pvp) { //this isn't fully functional
+			view.updateBoard(model.getBoard());
+			view.updateCurrentPlayer(model.getPlayer());
+			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
+			model.changeTurn();
 		}
 
 	}

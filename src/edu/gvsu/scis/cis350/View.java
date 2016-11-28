@@ -1,9 +1,7 @@
 package edu.gvsu.scis.cis350;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -14,32 +12,37 @@ import javax.swing.border.LineBorder;
  * This class handles the GUI.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
- * TODOs: Should have something that says who the current player is.
- * 		  Should have something that says how many pieces each player has.
- * 		  Handle GameOver and updating the winsPanel accordingly.
- *        NewGame is not working yet. --should be working but can't really test yet
- *        Add color changing.
- *        Ability to decide to play player vs player or player vs comp
+ * TODOs: Should have something that says how many pieces each player has
+ * 		  Isn't detecting game overs or when a player doesn't have a valid move
+ * 		  Needs to update the winsPanel accordingly
+ * 				-Can't do this until game detects game overs again
+ *        Need pop-up for invalid moves and game overs
+ *        Add functionality to "Save", "Load", "Customize"(allow player to customize the board colors) and "Rules"
+ *        "Player vs Computer"/"Player vs Player" is only partially functional 
+ *        		-Look in the presenter in the method nextTurnGUI() to see how the AI method is being called
  */
 public class View {
 	JFrame frame;
 
 	JPanel winsPanel;
-	JPanel buttonPanel;
+	JPanel playerPanel;
+	private JPanel reversiBoard;
+	
+	private JButton[][] reversiBoardSquares = new JButton[BSIZE][BSIZE];
 
 	JLabel bWins;
 	JLabel wWins;
+	JLabel currentPlayer;
 
 	JMenuBar menus;
-	JMenu fileMenu;
-	JMenuItem quitItem, newGameItem;
-	
+	JMenu fileMenu, gameMenu, helpMenu;
+	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem;
+
 
 	private static final int BSIZE = 8;
 	private int b;
 	private int w;
-	private JButton[][] reversiBoardSquares = new JButton[BSIZE][BSIZE];
-	private JPanel reversiBoard;
+	
 	private static final String COLS = "12345678";
 
 	/**
@@ -53,42 +56,50 @@ public class View {
 		frame = new JFrame();
 		frame.setPreferredSize(new Dimension(600, 315));
 		frame.setTitle("Reversi");
-		
+
 		reversiBoard = new JPanel(new GridLayout(0,9));
 		reversiBoard.setBorder(new LineBorder(Color.BLACK));
-		frame.add(reversiBoard);
+		frame.add(BorderLayout.NORTH,reversiBoard);
 
 		Insets buttonMargin = new Insets(0,0,0,0);
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
 				JButton butt = new JButton(" ");
 				butt.setMargin(buttonMargin);
-				ImageIcon icon = new ImageIcon(new BufferedImage(64,64, BufferedImage.TYPE_INT_ARGB));
-				butt.setIcon(icon);
 				butt.setBackground(Color.GREEN);
 				butt.setAlignmentX(col);
 				butt.setAlignmentY(row);
-				
+
 				reversiBoardSquares[col][row] = butt;
 			}
 		}
-		
+
 		reversiBoard.add(new JLabel(""));
-		
+
 		for (int ii = 0; ii < BSIZE; ii++){
 			reversiBoard.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
 		}
-		
+
 		for (int ii = 0; ii < BSIZE; ii++){
 			for (int jj = 0; jj < BSIZE; jj++){
 				switch (jj) {
-					case 0:
-						reversiBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
-					default:
-						reversiBoard.add(reversiBoardSquares[jj][ii]);
+				case 0:
+					reversiBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+				default:
+					reversiBoard.add(reversiBoardSquares[jj][ii]);
 				}
 			}
 		}
+
+		currentPlayer = new JLabel("Current player: " + Piece.BLACK);
+
+		//panel that shows the current player
+		playerPanel = new JPanel();
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
+		playerPanel.add(currentPlayer);
+		frame.add(BorderLayout.CENTER, playerPanel); 
+
+
 		//This is for a panel to keep track of the wins. 
 		//This was taken directly from a past project so it most likely
 		//needs some changes, but that can be taken care of later.
@@ -104,13 +115,32 @@ public class View {
 
 		// set up File menu
 		fileMenu = new JMenu("File");
+		helpMenu = new JMenu("Help");
+		gameMenu = new JMenu("Game");
+		
+		helpItem = new JMenuItem("Rules");
+		saveItem = new JMenuItem("Save");
+		loadItem = new JMenuItem("Load");
 		quitItem = new JMenuItem("Quit");
+		customItem = new JMenuItem("Customize");
 		newGameItem = new JMenuItem("New Game");
+		pvpItem = new JMenuItem("Player vs Player");
+		pvcItem = new JMenuItem("Player vs Computer");
+				
 		fileMenu.add(newGameItem);
+		fileMenu.add(saveItem);
+		fileMenu.add(loadItem);
 		fileMenu.add(quitItem);
+		gameMenu.add(customItem);		
+		gameMenu.add(pvpItem);
+		gameMenu.add(pvcItem);
+		helpMenu.add(helpItem);
+				
 		menus = new JMenuBar();
 		frame.setJMenuBar(menus);
 		menus.add(fileMenu);
+		menus.add(gameMenu);
+		menus.add(helpMenu);
 
 		frame.setVisible(true);
 		frame.pack();
@@ -131,6 +161,15 @@ public class View {
 	public void addNewGameActionListener(ActionListener a){
 		newGameItem.addActionListener(a);
 	}
+	
+	public void addPVPActionListener(ActionListener a) {
+		pvpItem.addActionListener(a);
+	}
+	
+	public void addPVCActionListener(ActionListener a) {
+		pvcItem.addActionListener(a);
+	}
+	
 
 	public void updateBoard(Piece[][] gameBoard){
 		for (int row = 0; row < BSIZE; row++) {
@@ -147,10 +186,32 @@ public class View {
 
 	}
 
-	public void updateWinsPanel(){
+	public void updateWinsPanel(int black, int white, boolean ties){
 		//update the current score after a game ends
+		b += black;
+		w += white;
+		System.out.println("B: "+b+" W: "+w);
+		if (ties == true) {
+			System.out.println("There was a tie.");
+		}
 	}
 	
+	public void updateCurrentPlayer(Object obj){
+		if (obj == Piece.BLACK) {
+			currentPlayer.setText("Current player: " + Piece.BLACK);
+		} else if (obj == Piece.WHITE) {
+			currentPlayer.setText("Current player: " + Piece.WHITE);
+		} else {
+			currentPlayer.setText("Error");
+		}
+		
+	}
+
+	public void gameOver(){
+		//inform user of game over
+		System.out.println("GAME OVER");
+	}
+
 	public int getButtonRow(Object event){
 		for(int r = 0; r < BSIZE; r++) {
 			for (int c = 0; c < BSIZE; c++) {
@@ -161,7 +222,7 @@ public class View {
 		}
 		return -2;
 	}
-	
+
 	public int getButtonCol(Object event){
 		for(int r = 0; r < BSIZE; r++) {
 			for (int c = 0; c < BSIZE; c++) {
@@ -173,101 +234,3 @@ public class View {
 		return -2;
 	}
 }
-
-	/*
-	 * A huge part of the old GUI. Keeping this for reference for now,
-	 * but it needs to be deleted eventually.
-	public void updatePanel() {	
-		//reset and update button panel
-		board = new JButton[BSIZE][BSIZE];
-
-		// create button panel
-		for (int row = 0; row < BSIZE; row++) {
-			for (int col = 0; col < BSIZE; col++) {
-				board[row][col] = new JButton(" ");
-			}
-		}
-
-		buttonPanel = new JPanel(new GridLayout(BSIZE, BSIZE));
-		for (int row = 0; row < BSIZE; row++) {
-			for (int col = 0; col < BSIZE; col++) {
-				buttonPanel.add(board[row][col]);
-			}
-		}
-
-		// register the listeners 
-		for (int row = 0; row < BSIZE; row++) {
-			for (int col = 0; col < BSIZE; col++) {
-				board[row][col].addActionListener(listener);
-			}
-		}
-
-		//reset winsPanel
-		b = 0;
-		w = 0;        
-
-		winsPanel.remove(bWins);
-		winsPanel.remove(wWins);
-		bWins = new JLabel("Black score: "+b);
-		wWins = new JLabel("White score: "+w);
-		winsPanel.add(bWins);
-		winsPanel.add(wWins);
-	}
-
-
-	private class ButtonListener implements ActionListener {
-		private static final int BSIZE = 8;
-		public void actionPerformed(ActionEvent e) {
-			Object comp = e.getSource();
-
-			if (comp == newGameItem) {
-				//game = presenter.newGame(); //create new game- this gives NullPointer
-
-				frame.remove(buttonPanel); //remove the old game information 
-				frame.remove(winsPanel);
-				updatePanel(); //update with new game information
-				frame.add(BorderLayout.SOUTH, buttonPanel); 
-				frame.add(BorderLayout.NORTH, winsPanel);
-
-				frame.revalidate();
-				frame.repaint();				
-			}
-			else if (comp == quitItem) { 
-				System.exit(0);
-			}
-			//this is a mess and does not work right now
-			else{ //board buttons
-				for(int row = 0; row < BSIZE; row++) //beginning of first chunk of code given to us
-					for (int col = 0; col < BSIZE; col++) {
-						if (board[row][col] == comp) { //comp is e.getSource()
-							if (game.placePiece(row, col) == true){ //if at the chosen position, and the spot is not taken
-								if(game.getPlayer() == Piece.WHITE){
-									board[row][col].setText("W");
-									board[row][col].setBackground(Color.WHITE);
-									//update board[row][col] to be Piece.WHITE-- This might actually be happening, but the board is not updating correctly
-								}
-								else if(game.getPlayer() == Piece.BLACK){
-									board[row][col].setText("B");
-									board[row][col].setBackground(Color.BLACK);
-									//update board[row][col] to be Piece.BLACK
-								}
-								game.changeTurn(); 
-							}
-							else{
-								JOptionPane.showMessageDialog(null, "Invalid move.");
-
-							}
-						}
-					}	
-				//Here: If the game has been completed, check to see who the winner is
-				//if winner is black- +1 to black's score in winsPanel
-				//if winner is white- +1 to white's score in winsPanel
-				//if there is no winner, don't update any score
-			}			
-		}
-	}	*/
-
-
-
-
-
