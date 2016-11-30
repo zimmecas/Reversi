@@ -49,23 +49,6 @@ public class Presenter {
 
 		view.updateBoard(model.getBoard());
 		
-		if (model.isGameOver()) { //This does not seem to work
-			System.out.println("!!!!Game over detected by Presenter!!!!");
-			if (model.countPieces()[1] > model.countPieces()[2]) {
-				System.out.println("Black wins!");
-				view.updateWinsPanel(1, 0, false);
-			} else if (model.countPieces()[2] > model.countPieces()[1]) {
-				System.out.println("White wins!");
-				view.updateWinsPanel(0, 1, false);
-			} else {
-				System.out.println("Tie!");
-				view.updateWinsPanel(0, 0, true);
-			}
-			newGame();
-			int[] count = model.countPieces();
-			view.updateBoard(model.getBoard());
-			view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
-		}
 
 		view.addBoardActionListeners(new ActionListener() {
 			@Override
@@ -76,6 +59,25 @@ public class Presenter {
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+				
+				if (model.isGameOver()) { //This does not seem to work
+					System.out.println("!!!!Game over detected by Presenter!!!!");
+					if (model.countPieces()[1] > model.countPieces()[2]) {
+						System.out.println("Black wins!");
+						view.updateWinsPanel(1, 0, false);
+					} else if (model.countPieces()[2] > model.countPieces()[1]) {
+						System.out.println("White wins!");
+						view.updateWinsPanel(0, 1, false);
+					} else {
+						System.out.println("Tie!");
+						view.updateWinsPanel(1, 1, true);
+					}
+					newGame();
+					count = model.countPieces();
+					view.updateBoard(model.getBoard());
+					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+				}
+				System.out.println(model.getPlayer()+" turn.");
 			}
 		});
 
@@ -273,7 +275,8 @@ public class Presenter {
 		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
 		} else { //If the move is not valid
-			System.out.println("Invalid move.");
+			//System.out.println("Invalid move.");
+			view.sendAlert("Invalid move.");
 		}
 		if (!pvp) { //this isn't fully functional
 			int[] count = model.countPieces();

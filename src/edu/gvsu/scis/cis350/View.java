@@ -12,11 +12,7 @@ import javax.swing.border.LineBorder;
  * This class handles the GUI.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
- * TODOs: 
- * 		  Isn't detecting game overs or when a player doesn't have a valid move
- * 		  Needs to update the winsPanel accordingly
- * 				-Can't do this until game detects game overs again
- *        Need pop-up for invalid moves and game overs
+ * TODOs: When a player runs out of moves, a "game over" occurs even if the other player still has valid moves.
  *        Add functionality to "Save", "Load", "Customize"(allow player to customize the board colors) and "Rules"
  *        "Player vs Computer"/"Player vs Player" is only partially functional 
  *        		-Look in the presenter in the method nextTurnGUI() to see how the AI method is being called
@@ -186,17 +182,29 @@ public class View {
 				}
 			}
 		}
-
 	}
 
 	public void updateWinsPanel(int black, int white, boolean ties){
 		//update the current score after a game ends
 		b += black;
 		w += white;
+		bWins.setText("Black score: " + b);
+		wWins.setText("White score: " + w);
 		System.out.println("B: "+b+" W: "+w);
-		if (ties == true) {
-			System.out.println("There was a tie.");
+		
+		if (black == 1){
+			JOptionPane.showMessageDialog(null,"Black wins!");
 		}
+		else if (white == 1){
+			JOptionPane.showMessageDialog(null,"White wins!");
+		}
+		else {
+			JOptionPane.showMessageDialog(null,"There was a tie.");
+		}
+	}
+	
+	public void sendAlert(String s) {
+		JOptionPane.showMessageDialog(null, s);
 	}
 	
 	public void updateCurrentPlayer(Piece obj, int bPiece, int wPiece){
@@ -210,11 +218,6 @@ public class View {
 			currentPlayer.setText("Error");
 		}
 		
-	}
-
-	public void gameOver(){
-		//inform user of game over
-		System.out.println("GAME OVER");
 	}
 
 	public int getButtonRow(Object event){
