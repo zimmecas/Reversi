@@ -186,10 +186,10 @@ public class Model {
 		for (int k = 0; k < HEIGHT; k++) {
 			for (int h = 0; h < WIDTH; h++) {
 				max[0] = 0;
-				if (isValidMove(k, h)) {
+				if (isValidMove(h, k)) {
 					for (int i = -1; i < 2; i++) {
 						for (int j = -1; j < 2; j++) {
-							max[0] = checkBestMove(k, h, i, j) + max[0];
+							max[0] = checkBestMove(h, k, i, j) + max[0];
 						}
 					}
 					if (prevMax < max[0]) {

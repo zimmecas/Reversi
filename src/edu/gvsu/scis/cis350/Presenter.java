@@ -274,6 +274,7 @@ public class Presenter {
 	public void nextTurnGUI(int col, int row){
 		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
+			
 		} else { //If the move is not valid
 			//System.out.println("Invalid move.");
 			view.sendAlert("Invalid move.");
@@ -284,6 +285,7 @@ public class Presenter {
 			view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
 			model.changeTurn();
+			  
 		}
 
 	}

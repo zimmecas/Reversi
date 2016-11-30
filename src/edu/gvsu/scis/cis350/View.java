@@ -182,6 +182,7 @@ public class View {
 				}
 			}
 		}
+		
 	}
 
 	public void updateWinsPanel(int black, int white, boolean ties){
