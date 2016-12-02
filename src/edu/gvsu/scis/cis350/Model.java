@@ -1,10 +1,17 @@
 package edu.gvsu.scis.cis350;
+
+import java.io.Serializable;
+
 /**
  * This class controls the board.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
  */
-public class Model {
+public class Model implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * The board width.
 	 */

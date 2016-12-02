@@ -2,9 +2,11 @@ package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
 
+import javax.swing.JFileChooser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 /**
  * This class communicates between the View and Model to run the game.
@@ -27,6 +29,9 @@ public class Presenter {
 	 * This variable is used for scanning in user input.
 	 */
 	private static Scanner s = new Scanner(System.in, "UTF-8");
+	
+
+final JFileChooser fc = new JFileChooser();
 
 	/**
 	 * Used to help catch invalid inputs.
@@ -59,7 +64,6 @@ public class Presenter {
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
-				
 				if (model.isGameOver()) { //This does not seem to work
 					System.out.println("!!!!Game over detected by Presenter!!!!");
 					if (model.countPieces()[1] > model.countPieces()[2]) {
@@ -117,6 +121,54 @@ public class Presenter {
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+			}
+		});	
+		view.addSaveActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			try {
+				if(fc.showSaveDialog(view.frame) == JFileChooser.APPROVE_OPTION){
+					File file = fc.getSelectedFile();
+				FileOutputStream saveFile = new FileOutputStream(file);
+				ObjectOutputStream save = new ObjectOutputStream(saveFile);
+				save.writeObject(model);
+				save.writeObject(view.b);
+				save.writeObject(view.w);
+				save.writeObject(model.getPlayer());
+				save.writeObject(pvp);
+				save.close();
+				}
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			}
+		});	
+		
+		view.addLoadActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(fc.showOpenDialog(view.frame) == JFileChooser.APPROVE_OPTION){
+						File file = fc.getSelectedFile();
+					FileInputStream loadFile = new FileInputStream(file);
+					ObjectInputStream load = new ObjectInputStream(loadFile);
+					model = (Model) load.readObject();
+					view.b = (int) load.readObject();
+					view.w = (int) load.readObject();
+					if(model.getPlayer() != (Piece) load.readObject())
+						model.changeTurn();
+					pvp = (Boolean) load.readObject();
+					int[] count = model.countPieces();
+					view.updateBoard(model.getBoard());
+					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+					load.close();
+					}
+					} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
 			}
 		});	
 	}
@@ -274,19 +326,20 @@ public class Presenter {
 	public void nextTurnGUI(int col, int row){
 		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
-			
+			if (!pvp) { //this isn't fully functional
+				int[] count = model.countPieces();
+				view.updateBoard(model.getBoard());
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+				model.placePiece(model.bestMove()[2], model.bestMove()[1]);
+				model.changeTurn();
+				
+				
+			}
 		} else { //If the move is not valid
 			//System.out.println("Invalid move.");
 			view.sendAlert("Invalid move.");
 		}
-		if (!pvp) { //this isn't fully functional
-			int[] count = model.countPieces();
-			view.updateBoard(model.getBoard());
-			view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
-			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
-			model.changeTurn();
-			  
-		}
+		
 
 	}
 }

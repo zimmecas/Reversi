@@ -36,8 +36,8 @@ public class View {
 
 
 	private static final int BSIZE = 8;
-	private int b;
-	private int w;
+	int b;
+	int w;
 	
 	private static final String COLS = "12345678";
 
@@ -169,6 +169,14 @@ public class View {
 		pvcItem.addActionListener(a);
 	}
 	
+	public void addSaveActionListener(ActionListener a) {
+		saveItem.addActionListener(a);
+	}
+	
+	public void addLoadActionListener(ActionListener a) {
+		loadItem.addActionListener(a);
+	}
+	
 
 	public void updateBoard(Piece[][] gameBoard){
 		for (int row = 0; row < BSIZE; row++) {
@@ -181,8 +189,8 @@ public class View {
 					reversiBoardSquares[row][col].setBackground(Color.GREEN);
 				}
 			}
+	    
 		}
-		
 	}
 
 	public void updateWinsPanel(int black, int white, boolean ties){
