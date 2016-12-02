@@ -2,11 +2,17 @@ package edu.gvsu.scis.cis350;
 
 import java.util.Scanner;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 
 /**
  * This class communicates between the View and Model to run the game.
@@ -31,7 +37,7 @@ public class Presenter {
 	private static Scanner s = new Scanner(System.in, "UTF-8");
 	
 
-final JFileChooser fc = new JFileChooser();
+	final JFileChooser fc = new JFileChooser();
 
 	/**
 	 * Used to help catch invalid inputs.
@@ -67,10 +73,10 @@ final JFileChooser fc = new JFileChooser();
 				if (model.isGameOver()) { //This does not seem to work
 					System.out.println("!!!!Game over detected by Presenter!!!!");
 					if (model.countPieces()[1] > model.countPieces()[2]) {
-						System.out.println("Black wins!");
+						System.out.println("Player 1 wins!");
 						view.updateWinsPanel(1, 0, false);
 					} else if (model.countPieces()[2] > model.countPieces()[1]) {
-						System.out.println("White wins!");
+						System.out.println("Player 2 wins!");
 						view.updateWinsPanel(0, 1, false);
 					} else {
 						System.out.println("Tie!");
@@ -81,7 +87,7 @@ final JFileChooser fc = new JFileChooser();
 					view.updateBoard(model.getBoard());
 					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 				}
-				System.out.println(model.getPlayer()+" turn.");
+				//System.out.println(model.getPlayer()+" turn.");
 			}
 		});
 
@@ -123,6 +129,7 @@ final JFileChooser fc = new JFileChooser();
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});	
+		
 		view.addSaveActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -139,7 +146,6 @@ final JFileChooser fc = new JFileChooser();
 				save.close();
 				}
 				} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
@@ -166,9 +172,18 @@ final JFileChooser fc = new JFileChooser();
 					load.close();
 					}
 					} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
+			}
+		});	
+		
+		view.addCustomActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				view.background = JColorChooser.showDialog(null, "Choose a Background Color", view.background);
+				view.p1Color = JColorChooser.showDialog(null, "Choose a Color for Player 1", view.p1Color);
+				view.p2Color = JColorChooser.showDialog(null, "Choose a Color for Player 2", view.p2Color);
+				view.updateBoard(model.getBoard());
 			}
 		});	
 	}

@@ -39,6 +39,8 @@ public class View {
 	int b;
 	int w;
 	
+	Color background = Color.GREEN, p1Color = Color.BLACK, p2Color = Color.WHITE;
+	
 	private static final String COLS = "12345678";
 
 	/**
@@ -89,8 +91,8 @@ public class View {
 			}
 		}
 
-		currentPlayer = new JLabel("Current player: " + Piece.BLACK +"                                "
-				+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
+		currentPlayer = new JLabel("Current player: Player 1" +"                                "
+				+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
 
 		//panel that shows the current player
 		playerPanel = new JPanel();
@@ -102,8 +104,8 @@ public class View {
 		//This is for a panel to keep track of the wins. 
 		//This was taken directly from a past project so it most likely
 		//needs some changes, but that can be taken care of later.
-		bWins = new JLabel("Black score: " + b);
-		wWins = new JLabel("White score: " + w);
+		bWins = new JLabel("Player 1 score: " + b);
+		wWins = new JLabel("Player 2 score: " + w);
 
 		// create wins panel
 		winsPanel = new JPanel();
@@ -176,17 +178,20 @@ public class View {
 	public void addLoadActionListener(ActionListener a) {
 		loadItem.addActionListener(a);
 	}
+	public void addCustomActionListener(ActionListener a) {
+		customItem.addActionListener(a);
+	}
 	
 
 	public void updateBoard(Piece[][] gameBoard){
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
 				if (gameBoard[row][col] == Piece.BLACK) { //if the piece at that position is black, make black
-					reversiBoardSquares[row][col].setBackground(Color.BLACK);
+					reversiBoardSquares[row][col].setBackground(p1Color);
 				} else if (gameBoard[row][col] == Piece.WHITE) { //if the piece at that position is white, make white
-					reversiBoardSquares[row][col].setBackground(Color.WHITE);
+					reversiBoardSquares[row][col].setBackground(p2Color);
 				} else {
-					reversiBoardSquares[row][col].setBackground(Color.GREEN);
+					reversiBoardSquares[row][col].setBackground(background);
 				}
 			}
 	    
@@ -197,15 +202,15 @@ public class View {
 		//update the current score after a game ends
 		b += black;
 		w += white;
-		bWins.setText("Black score: " + b);
-		wWins.setText("White score: " + w);
+		bWins.setText("Player 1 score: " + b);
+		wWins.setText("Player 2 score: " + w);
 		System.out.println("B: "+b+" W: "+w);
 		
 		if (black == 1){
-			JOptionPane.showMessageDialog(null,"Black wins!");
+			JOptionPane.showMessageDialog(null,"Player 1 wins!");
 		}
 		else if (white == 1){
-			JOptionPane.showMessageDialog(null,"White wins!");
+			JOptionPane.showMessageDialog(null,"Player 2 wins!");
 		}
 		else {
 			JOptionPane.showMessageDialog(null,"There was a tie.");
@@ -218,11 +223,11 @@ public class View {
 	
 	public void updateCurrentPlayer(Piece obj, int bPiece, int wPiece){
 		if (obj == Piece.BLACK) {
-			currentPlayer.setText("Current player: " + Piece.BLACK +"                                "
-					+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
+			currentPlayer.setText("Current player: Player 1" +"                                "
+					+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
 		} else if (obj == Piece.WHITE) {
-			currentPlayer.setText("Current player: " + Piece.WHITE +"                                "
-					+Piece.BLACK+" Piece Count: " +bPiece+"         "+Piece.WHITE+" Piece Count: " +wPiece);
+			currentPlayer.setText("Current player: Player 2" +"                                "
+					+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
 		} else {
 			currentPlayer.setText("Error");
 		}
