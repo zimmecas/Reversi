@@ -183,6 +183,7 @@ public class Presenter {
 				view.background = JColorChooser.showDialog(null, "Choose a Background Color", view.background);
 				view.p1Color = JColorChooser.showDialog(null, "Choose a Color for Player 1", view.p1Color);
 				view.p2Color = JColorChooser.showDialog(null, "Choose a Color for Player 2", view.p2Color);
+				view.helpColor = JColorChooser.showDialog(null, "Choose a Color for Showing Moves", view.helpColor);
 				view.updateBoard(model.getBoard());
 			}
 		});	
@@ -190,7 +191,19 @@ public class Presenter {
 		view.addValidMovesActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//TODO
+				for(int i = 0; i < model.getBoardSize(); i++)
+					for(int j = 0; j < model.getBoardSize(); j++)
+						if(model.isValidMove(j, i)){
+						
+							view.showValidMoves(i, j);
+							}
+			}
+		});
+		
+		view.addRecommendActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				view.showValidMoves(model.bestMove()[1], model.bestMove()[2]);
 			}
 		});
 	}

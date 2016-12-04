@@ -31,14 +31,14 @@ public class View {
 
 	JMenuBar menus;
 	JMenu fileMenu, gameMenu, helpMenu;
-	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem, validMovesItem;
+	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem, validMovesItem, recommendItem;
 
 
 	private static final int BSIZE = 8;
 	int b;
 	int w;
 	
-	Color background = Color.GREEN, p1Color = Color.BLACK, p2Color = Color.WHITE;
+	Color background = Color.GREEN, p1Color = Color.BLACK, p2Color = Color.WHITE, helpColor = Color.YELLOW;
 	
 	private static final String COLS = "12345678";
 
@@ -127,6 +127,7 @@ public class View {
 		pvpItem = new JMenuItem("Player vs Player");
 		pvcItem = new JMenuItem("Player vs Computer");
 		validMovesItem = new JMenuItem("Show Valid Moves");
+		recommendItem = new JMenuItem("Show Recommended Move");
 				
 		fileMenu.add(newGameItem);
 		fileMenu.add(saveItem);
@@ -137,6 +138,7 @@ public class View {
 		gameMenu.add(pvcItem);
 		helpMenu.add(helpItem);
 		helpMenu.add(validMovesItem);
+		helpMenu.add(recommendItem);
 				
 		menus = new JMenuBar();
 		frame.setJMenuBar(menus);
@@ -185,6 +187,9 @@ public class View {
 	public void addValidMovesActionListener(ActionListener a) {
 		validMovesItem.addActionListener(a);
 	}
+	public void addRecommendActionListener(ActionListener a) {
+		recommendItem.addActionListener(a);
+	}
 	
 
 	public void updateBoard(Piece[][] gameBoard){
@@ -200,6 +205,10 @@ public class View {
 			}
 	    
 		}
+	}
+	
+	public void showValidMoves(int row, int col){
+		reversiBoardSquares[row][col].setBackground(helpColor);
 	}
 
 	public void updateWinsPanel(int black, int white, boolean ties){
