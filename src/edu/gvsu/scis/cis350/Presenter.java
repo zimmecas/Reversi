@@ -87,6 +87,7 @@ public class Presenter {
 					view.updateBoard(model.getBoard());
 					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 				}
+				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
 

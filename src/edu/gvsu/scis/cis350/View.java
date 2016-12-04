@@ -12,8 +12,7 @@ import javax.swing.border.LineBorder;
  * This class handles the GUI.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
- * TODOs: When a player runs out of moves, a "game over" occurs even if the other player still has valid moves.
- *        Add "Rules" and "Show valid moves"
+ * TODOs: Add "Rules"
  *        Add a delay before the computer's moves, if possible
  */
 public class View {

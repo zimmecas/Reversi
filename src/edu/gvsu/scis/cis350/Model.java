@@ -291,7 +291,6 @@ public class Model implements Serializable {
 		} else {
 			changeTurn();
 			if (anyMovesLeft()) {
-				changeTurn();
 				return false;
 			}
 		}
@@ -310,7 +309,6 @@ public class Model implements Serializable {
 				}
 			}
 		}
-		changeTurn();
 		return false;
 	}
 	/**
