@@ -3,6 +3,7 @@ package edu.gvsu.scis.cis350;
 import java.util.Scanner;
 
 import javax.swing.*;
+import javax.swing.Timer; 
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,8 +59,7 @@ public class Presenter {
 		model = m;
 		view = v;
 
-		view.updateBoard(model.getBoard());
-		
+		view.updateBoard(model.getBoard());		
 
 		view.addBoardActionListeners(new ActionListener() {
 			@Override
@@ -87,7 +87,6 @@ public class Presenter {
 					view.updateBoard(model.getBoard());
 					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 				}
-				//System.out.println(model.getPlayer()+" turn.");
 			}
 		});
 
@@ -169,6 +168,7 @@ public class Presenter {
 					int[] count = model.countPieces();
 					view.updateBoard(model.getBoard());
 					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+					view.updateWinsPanel(0, 0, false);
 					load.close();
 					}
 					} catch (Exception e1) {
@@ -186,6 +186,13 @@ public class Presenter {
 				view.updateBoard(model.getBoard());
 			}
 		});	
+		
+		view.addValidMovesActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				//TODO
+			}
+		});
 	}
 
 
@@ -347,11 +354,8 @@ public class Presenter {
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 				model.placePiece(model.bestMove()[2], model.bestMove()[1]);
 				model.changeTurn();
-				
-				
 			}
 		} else { //If the move is not valid
-			//System.out.println("Invalid move.");
 			view.sendAlert("Invalid move.");
 		}
 		

@@ -13,9 +13,8 @@ import javax.swing.border.LineBorder;
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
  * TODOs: When a player runs out of moves, a "game over" occurs even if the other player still has valid moves.
- *        Add functionality to "Save", "Load", "Customize"(allow player to customize the board colors) and "Rules"
- *        "Player vs Computer"/"Player vs Player" is only partially functional 
- *        		-Look in the presenter in the method nextTurnGUI() to see how the AI method is being called
+ *        Add "Rules" and "Show valid moves"
+ *        Add a delay before the computer's moves, if possible
  */
 public class View {
 	JFrame frame;
@@ -32,7 +31,7 @@ public class View {
 
 	JMenuBar menus;
 	JMenu fileMenu, gameMenu, helpMenu;
-	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem;
+	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem, validMovesItem;
 
 
 	private static final int BSIZE = 8;
@@ -127,6 +126,7 @@ public class View {
 		newGameItem = new JMenuItem("New Game");
 		pvpItem = new JMenuItem("Player vs Player");
 		pvcItem = new JMenuItem("Player vs Computer");
+		validMovesItem = new JMenuItem("Show Valid Moves");
 				
 		fileMenu.add(newGameItem);
 		fileMenu.add(saveItem);
@@ -136,6 +136,7 @@ public class View {
 		gameMenu.add(pvpItem);
 		gameMenu.add(pvcItem);
 		helpMenu.add(helpItem);
+		helpMenu.add(validMovesItem);
 				
 		menus = new JMenuBar();
 		frame.setJMenuBar(menus);
@@ -181,6 +182,9 @@ public class View {
 	public void addCustomActionListener(ActionListener a) {
 		customItem.addActionListener(a);
 	}
+	public void addValidMovesActionListener(ActionListener a) {
+		validMovesItem.addActionListener(a);
+	}
 	
 
 	public void updateBoard(Piece[][] gameBoard){
@@ -212,8 +216,14 @@ public class View {
 		else if (white == 1){
 			JOptionPane.showMessageDialog(null,"Player 2 wins!");
 		}
-		else {
+		else if (ties){
 			JOptionPane.showMessageDialog(null,"There was a tie.");
+		}
+		else if((black==0) && (white==0) && (!ties)){
+			//do nothing
+		}
+		else {
+			JOptionPane.showMessageDialog(null,"Error");
 		}
 	}
 	
