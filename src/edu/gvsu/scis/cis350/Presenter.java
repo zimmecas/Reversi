@@ -3,7 +3,6 @@ package edu.gvsu.scis.cis350;
 import java.util.Scanner;
 
 import javax.swing.*;
-import javax.swing.Timer; 
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -207,6 +206,23 @@ public class Presenter {
 				view.showValidMoves(model.bestMove()[1], model.bestMove()[2]);
 			}
 		});
+		
+		view.addHelpActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				JOptionPane.showMessageDialog(null, "The Rules\n\nReversi takes place between two players, black and white, on an 8x8 board of 64 squares."
++"\nThe board is set up initially with two black discs and two white discs in the center."
++"\nBlack always plays first with players then taking alternate turns."
++"\nAt each turn a player must place a disc with their colour face up on one of the empty squares of the board, adjacent to an opponent's disc "
++"\nsuch that one or more straight lines (horizontal, vertical or diagonal) are formed from the newly placed disc,"
++"\nthrough one or more of the opponent's discs and up to other discs of their own colour already on the board. "
++"\nAll the intervening discs of the opponent's colour are flipped to the colour of the newly laid disc."
++"\nDiscs may be flipped from one colour to the other but once played are not moved from one square to another or removed from the board."
++"\nPlayers may not pass unless there is no valid move available to them in which case they must pass."
++"\nPlay continues until neither player is able to move, usually when all 64 squares have been played."
++"\nThe winner is the player with most pieces turned to their colour at the close of play.");
+			}
+		});
 	}
 
 
@@ -253,113 +269,15 @@ public class Presenter {
 	}
 
 	/**
-	 * This method receives the user's input and 
-	 * confirms that the input is valid.
+	 * This method resets the game.
 	 */
-	public final void getInput() {
-		int x = -1;
-		int y = -1;
-		String input;
 
-		while (x == -1) {
-			System.out.print(model.getPlayer() + " Input x value");
-			input = s.next();
-			x = checkInput(input);
-			if (x == FLAG) {
-				model.changeTurn();
-				return;
-			}
-			if (x == 100) {
-				System.out.println("Please enter a number between 1 and 8");
-				x = -1;
-			}
-		}
-		x--;
-
-		while (y == -1) {
-			System.out.print(model.getPlayer() + " Input y value");
-			input = s.next();
-			y = checkInput(input);
-			if (y == FLAG) {
-				model.changeTurn();
-				return;
-			}
-			if (y == 100) {
-				System.out.println("Please enter a number between 1 and 8");
-				y = -1;
-			}
-		}
-		y--;
-
-		if (placePiece(y, x)) {
-			return;
-		} else { //If the move is not valid
-			System.out.println("Invalid move.");
-			getInput();
-		}
-	}
-
-	/**
-	 * This method checks the user input to make sure that the input is valid.
-	 * @param input This is the input from the user
-	 * @return int Return the x or y value that the user inputed
-	 */
-	public final int checkInput(final String input) {
-		if (input.toLowerCase().equals("quit")) {
-			System.exit(0); 
-		} else if (input.toLowerCase().equals("restart")) {
-			model = new Model();
-			return FLAG;
-		} else if (input.toLowerCase().equals("pvp")) {
-			pvp = true;
-			model = new Model();
-			return FLAG;
-		} else if (input.toLowerCase().equals("pve")) {
-			model = new Model();
-			pvp = false;
-			model.print();
-			getInput();
-			model.changeTurn();	
-			return FLAG;
-		} else {
-			int z = -1;
-			try {
-				z = Integer.parseInt(input);
-			} catch (NumberFormatException e) {
-				System.out.println("Not a valid input");
-				return z;
-			}
-			int size = model.getBoardSize();
-			if (z >= 1 && z <= size) { //1-8
-				return z;
-			}
-		}
-		return 100;
-	}
 
 	public void newGame() {
 		model = new Model();
 	}
 
-
-	/**
-	 * This method checks for a game over.
-	 * If it is not game over, the turn switches to the next player.
-	 * @return This returns the next player
-	 */
-	public final Piece nextTurn() { //This was for the text based version and will need to be removed before release
-		model.print();
-		getInput();
-		model.changeTurn();	
-		if (!pvp) {
-			model.print();
-			model.placePiece(model.bestMove()[2], model.bestMove()[1]);
-			model.changeTurn();
-		}
-		return model.getPlayer();
-	}
-
-	public void nextTurnGUI(int col, int row){
+	void nextTurnGUI(int col, int row){
 		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
 			if (!pvp) { //this isn't fully functional

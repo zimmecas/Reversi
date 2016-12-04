@@ -416,13 +416,6 @@ public class Model implements Serializable {
 		return b;
 	}
 	
-	/**
-	 * This method sets board equal to a new value.
-	 * @param b This is the new value that board will be equal to
-	 */
-	public final void setBoard(final Piece[][] b) {
-		board = b;
-	}
 	
 	/**
 	 * This method returns the size of the board.

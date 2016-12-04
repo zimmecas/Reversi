@@ -14,15 +14,10 @@ public class ModelTest {
 		m = new Model();
 	}
 
-	@Test
-	public final void testMakeBoard() {
-		Piece[][] p = new Piece[8][8];
-		assertArrayEquals("initial boards not equal", p, m.makeBoard());
-	}
 
 	@Test
 	public final void testFillBoard() {
-		Piece[][] p = m.makeBoard();
+		Piece[][] p = new Piece[8][8];
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				p[j][i] = Piece.EMPTY;
@@ -159,5 +154,10 @@ public class ModelTest {
 	@Test
 	public final void testGetBoardSize() {
 		assertEquals("board width/height should equal 8", m.getBoardSize(), 8);
+	}
+	@Test
+	public final void testBestMove() {
+		assertEquals("best move should be 2, 3", m.bestMove()[1],  2);
+		assertEquals("best move should be 2, 3", m.bestMove()[2],  3);
 	}
 }

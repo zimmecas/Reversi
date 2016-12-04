@@ -189,6 +189,9 @@ public class View {
 	public void addRecommendActionListener(ActionListener a) {
 		recommendItem.addActionListener(a);
 	}
+	public void addHelpActionListener(ActionListener a) {
+		helpItem.addActionListener(a);
+	}
 	
 
 	public void updateBoard(Piece[][] gameBoard){
