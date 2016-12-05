@@ -1,11 +1,22 @@
 package edu.gvsu.scis.cis350;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
-
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-
 
 
 /**
@@ -16,29 +27,137 @@ import javax.swing.border.LineBorder;
  *        Add a delay before the computer's moves, if possible
  */
 public class View {
-	JFrame frame;
+	/**
+	 * The GUI frame.
+	 */
+	private JFrame frame;
 
-	JPanel winsPanel;
-	JPanel playerPanel;
+	/**
+	 * The panel that keeps track of the players' wins.
+	 */
+	private JPanel winsPanel;
+	/**
+	 * The panel that keeps track of the current player and the piece counts.
+	 */
+	private JPanel playerPanel;
+	/**
+	 * This panel contains the board.
+	 */
 	private JPanel reversiBoard;
 	
-	private JButton[][] reversiBoardSquares = new JButton[BSIZE][BSIZE];
+	/**
+	 * A 2D array of JButtons that make up the board.
+	 */
+	private JButton[][] boardSquares = new JButton[BSIZE][BSIZE];
 
-	JLabel bWins;
-	JLabel wWins;
-	JLabel currentPlayer;
+	/**
+	 * This label displays player 1's (black) wins.
+	 */
+	private JLabel bWins;
+	/**
+	 * This label displays player 2's (white) wins.
+	 */
+	private JLabel wWins;
+	/**
+	 * This label displays the current player.
+	 */
+	private JLabel currentPlayer;
 
-	JMenuBar menus;
-	JMenu fileMenu, gameMenu, helpMenu;
-	JMenuItem quitItem, newGameItem, helpItem, saveItem, loadItem, customItem, pvpItem, pvcItem, validMovesItem, recommendItem;
+	/**
+	 * This variable is for the menu bar.
+	 */
+	private JMenuBar menus;
+	/**
+	 * These are the menus that will go into the menu bar.
+	 */
+	private JMenu fileMenu, gameMenu, helpMenu;
 
+	/**
+	 * When this item is clicked, it will close the game.
+	 */
+	private JMenuItem quitItem;
+	/**
+	 * When this item is clicked, it will start a new game.
+	 */
+	private JMenuItem newGameItem;
+	/**
+	 * When this item is clicked, it will show the game rules.
+	 */
+	private JMenuItem helpItem;
+	/**
+	 * When this item is clicked, it will save the game file.
+	 */
+	private JMenuItem saveItem;
+	/**
+	 * When this item is clicked, the player can choose a game file to load.
+	 */
+	private JMenuItem loadItem;
+	/**
+	 * When this item is clicked, the player can change the colors of the board.
+	 */
+	private JMenuItem customItem;
+	/**
+	 * When this item is clicked, the game will be player vs player.
+	 */
+	private JMenuItem pvpItem;
+	/**
+	 * When this item is clicked, the game will be player vs computer.
+	 */
+	private JMenuItem pvcItem;
+	/**
+	 * When this item is clicked, the player's valid moves will be shown.
+	 */
+	private JMenuItem validMovesItem;
+	/**
+	 * When this item is clicked, a recommended move will be shown.
+	 */
+	private JMenuItem recommendItem;
 
+	/**
+	 * This is the length of the board.
+	 */
 	private static final int BSIZE = 8;
-	int b;
-	int w;
+	/**
+	 * A flag for when an error occurs.
+	 */
+	private static final int FLAG = -2;
+	/**
+	 * The width of the frame.
+	 */
+	private static final int DIMX = 600;
+	/**
+	 * The height of the frame.
+	 */
+	private static final int DIMY = 315;
+	/**
+	 * This keeps track of player 1's (black score.
+	 */
+	private int b;
+	/**
+	 * This keeps track of player 2's (white) score.
+	 */
+	private int w;
+
+	/**
+	 * This is the default background color of the board.
+	 */
+	private Color background = Color.GREEN;
+	/**
+	 * This is the default color of player 1's pieces.
+	 */
+	private Color p1Color = Color.BLACK;
+	/**
+	 * This is the default color of player 2's pieces.
+	 */
+	private Color p2Color = Color.WHITE;
+	/**
+	 * This is the color of valid moves and the recommended move.
+	 */
+	private Color helpColor = Color.YELLOW;
 	
-	Color background = Color.GREEN, p1Color = Color.BLACK, p2Color = Color.WHITE, helpColor = Color.YELLOW;
-	
+	/**
+	 * This is used for numbering the board.
+	 */
 	private static final String COLS = "12345678";
 
 	/**
@@ -52,14 +171,14 @@ public class View {
 
 		// establish the frame
 		frame = new JFrame();
-		frame.setPreferredSize(new Dimension(600, 315));
+		frame.setPreferredSize(new Dimension(DIMX, DIMY));
 		frame.setTitle("Reversi");
 
-		reversiBoard = new JPanel(new GridLayout(0,9));
+		reversiBoard = new JPanel(new GridLayout(0, BSIZE + 1));
 		reversiBoard.setBorder(new LineBorder(Color.BLACK));
-		frame.add(BorderLayout.NORTH,reversiBoard);
+		frame.add(BorderLayout.NORTH, reversiBoard);
 
-		Insets buttonMargin = new Insets(0,0,0,0);
+		Insets buttonMargin = new Insets(0, 0, 0, 0);
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
 				JButton butt = new JButton(" ");
@@ -68,29 +187,31 @@ public class View {
 				butt.setAlignmentX(col);
 				butt.setAlignmentY(row);
 
-				reversiBoardSquares[col][row] = butt;
+				boardSquares[col][row] = butt;
 			}
 		}
 
 		reversiBoard.add(new JLabel(""));
-
-		for (int ii = 0; ii < BSIZE; ii++){
-			reversiBoard.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
+		for (int i = 0; i < BSIZE; i++) {
+			reversiBoard.add(new JLabel(
+					COLS.substring(i, i + 1), SwingConstants.CENTER));
 		}
 
-		for (int ii = 0; ii < BSIZE; ii++){
-			for (int jj = 0; jj < BSIZE; jj++){
-				switch (jj) {
+		for (int i = 0; i < BSIZE; i++) {
+			for (int j = 0; j < BSIZE; j++) {
+				switch (j) {
 				case 0:
-					reversiBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+					reversiBoard.add(new JLabel(
+							"" + (i + 1), SwingConstants.CENTER));
 				default:
-					reversiBoard.add(reversiBoardSquares[jj][ii]);
+					reversiBoard.add(boardSquares[j][i]);
 				}
 			}
 		}
 
-		currentPlayer = new JLabel("Current player: Player 1" +"                                "
-				+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
+		currentPlayer = new JLabel("Current player: Player 1" 
+				+ "                             " + "Player 1 Piece Count: " 
+				+ bPiece + "         " + "Player 2 Piece Count: " + wPiece);
 
 		//panel that shows the current player
 		playerPanel = new JPanel();
@@ -149,131 +270,293 @@ public class View {
 		frame.pack();
 	}
 
-	public void addBoardActionListeners(ActionListener a) {
-		for (int ii = 0; ii < BSIZE; ii++){
-			for (int jj = 0; jj < BSIZE; jj++){
-				reversiBoardSquares[jj][ii].addActionListener(a);
+	/**
+	 * This adds the ActionListeners for the board buttons in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addBoardActionListeners(final ActionListener a) {
+		for (int i = 0; i < BSIZE; i++) {
+			for (int j = 0; j < BSIZE; j++) {
+				boardSquares[j][i].addActionListener(a);
 			}
 		}
 	}
-
-	public void addQuitActionListener(ActionListener a){
+	/**
+	 * This adds the ActionListeners for Quit in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addQuitActionListener(final ActionListener a) {
 		quitItem.addActionListener(a);
 	}
-
-	public void addNewGameActionListener(ActionListener a){
+	/**
+	 * This adds the ActionListeners for New Game in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addNewGameActionListener(final ActionListener a) {
 		newGameItem.addActionListener(a);
 	}
-	
-	public void addPVPActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Player vs Player in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addPVPActionListener(final ActionListener a) {
 		pvpItem.addActionListener(a);
 	}
-	
-	public void addPVCActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Player vs Computer in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */	
+	public final void addPVCActionListener(final ActionListener a) {
 		pvcItem.addActionListener(a);
 	}
-	
-	public void addSaveActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Save in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addSaveActionListener(final ActionListener a) {
 		saveItem.addActionListener(a);
 	}
-	
-	public void addLoadActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Load in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */	
+	public final void addLoadActionListener(final ActionListener a) {
 		loadItem.addActionListener(a);
 	}
-	public void addCustomActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Customize in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addCustomActionListener(final ActionListener a) {
 		customItem.addActionListener(a);
 	}
-	public void addValidMovesActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Valid Moves in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addValidMovesActionListener(final ActionListener a) {
 		validMovesItem.addActionListener(a);
 	}
-	public void addRecommendActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Recommended Moves in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addRecommendActionListener(final ActionListener a) {
 		recommendItem.addActionListener(a);
 	}
-	public void addHelpActionListener(ActionListener a) {
+	/**
+	 * This adds the ActionListeners for Rules in the presenter.
+	 * @param a This is the ActionListener that will be sent to the presenter.
+	 */
+	public final void addHelpActionListener(final ActionListener a) {
 		helpItem.addActionListener(a);
 	}
-	
 
-	public void updateBoard(Piece[][] gameBoard){
+	/**
+	 * This method updates the board colors based on the updated piece values.
+	 * @param gameBoard This board contains the updated piece values. 
+	 */
+	public final void updateBoard(final Piece[][] gameBoard) {
 		for (int row = 0; row < BSIZE; row++) {
 			for (int col = 0; col < BSIZE; col++) {
-				if (gameBoard[row][col] == Piece.BLACK) { //if the piece at that position is black, make black
-					reversiBoardSquares[row][col].setBackground(p1Color);
-				} else if (gameBoard[row][col] == Piece.WHITE) { //if the piece at that position is white, make white
-					reversiBoardSquares[row][col].setBackground(p2Color);
+				if (gameBoard[row][col] == Piece.BLACK) {
+					boardSquares[row][col].setBackground(p1Color);
+				} else if (gameBoard[row][col] == Piece.WHITE) {
+					boardSquares[row][col].setBackground(p2Color);
 				} else {
-					reversiBoardSquares[row][col].setBackground(background);
+					boardSquares[row][col].setBackground(background);
 				}
 			}
 	    
 		}
 	}
 	
-	public void showValidMoves(int row, int col){
-		reversiBoardSquares[row][col].setBackground(helpColor);
+	/**
+	 * This method displays the current player's valid moves.
+	 * @param row The row of a valid move
+	 * @param col The column of a valid move
+	 */
+	public final void showValidMoves(final int row, final int col) {
+		boardSquares[row][col].setBackground(helpColor);
 	}
 
-	public void updateWinsPanel(int black, int white, boolean ties){
+	/**
+	 * This updates the winsPanel and displays who has won the game.
+	 * @param black If player 1 has won, black = 1
+	 * @param white If player 2 has won, white = 1
+	 * @param ties If true, a tie has occurred 
+	 */
+	public final void updateWinsPanel(final int black, 
+			final int white, final boolean ties) {
 		//update the current score after a game ends
 		b += black;
 		w += white;
 		bWins.setText("Player 1 score: " + b);
 		wWins.setText("Player 2 score: " + w);
-		System.out.println("B: "+b+" W: "+w);
 		
-		if (black == 1){
-			JOptionPane.showMessageDialog(null,"Player 1 wins!");
-		}
-		else if (white == 1){
-			JOptionPane.showMessageDialog(null,"Player 2 wins!");
-		}
-		else if (ties){
-			JOptionPane.showMessageDialog(null,"There was a tie.");
-		}
-		else if((black==0) && (white==0) && (!ties)){
-			//do nothing
-		}
-		else {
-			JOptionPane.showMessageDialog(null,"Error");
+		if (black == 1) {
+			JOptionPane.showMessageDialog(null, "Player 1 wins!");
+		} else if (white == 1) {
+			JOptionPane.showMessageDialog(null, "Player 2 wins!");
+		} else if (ties) {
+			JOptionPane.showMessageDialog(null, "There was a tie.");
+		} else if ((black == 0) && (white == 0) && !ties) {
+			System.out.println("Game loaded.");
+			//do nothing- this updates the scores when a game file is loaded.
+		} else {
+			sendAlert("Error");
 		}
 	}
-	
-	public void sendAlert(String s) {
+	/**
+	 * This shows a pop-up to alert the player of a problem.
+	 * @param s This is the message that should be displayed to the player
+	 */
+	public final void sendAlert(final String s) {
 		JOptionPane.showMessageDialog(null, s);
 	}
-	
-	public void updateCurrentPlayer(Piece obj, int bPiece, int wPiece){
+	/**
+	 * This updates the current player and the pieces counts after every turn.
+	 * @param obj The piece of the current player
+	 * @param bPiece The piece count for player 1
+	 * @param wPiece The piece count for player 2
+	 */
+	public final void updateCurrentPlayer(final Piece obj,
+			final int bPiece, final int wPiece) {
 		if (obj == Piece.BLACK) {
-			currentPlayer.setText("Current player: Player 1" +"                                "
-					+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
+			currentPlayer.setText("Current player: Player 1" 
+					+ "                             " + "Player 1 Piece Count: "
+					+ bPiece + "         " + "Player 2 Piece Count: " + wPiece);
 		} else if (obj == Piece.WHITE) {
-			currentPlayer.setText("Current player: Player 2" +"                                "
-					+"Player 1 Piece Count: " +bPiece+"         "+"Player 2 Piece Count: " +wPiece);
+			currentPlayer.setText("Current player: Player 2" 
+					+ "                             " + "Player 1 Piece Count: "
+					+ bPiece + "         " + "Player 2 Piece Count: " + wPiece);
 		} else {
 			currentPlayer.setText("Error");
 		}
 		
 	}
 
-	public int getButtonRow(Object event){
-		for(int r = 0; r < BSIZE; r++) {
+	/**
+	 * This method send the presenter the row of the selected button.
+	 * @param event The event triggered by the selected button
+	 * @return This is the row of the selected button
+	 */
+	public final int getButtonRow(final Object event) {
+		for (int r = 0; r < BSIZE; r++) {
 			for (int c = 0; c < BSIZE; c++) {
-				if (reversiBoardSquares[r][c] == event) { //event is e.getSource()
+				if (boardSquares[r][c] == event) { //event is e.getSource()
 					return r;
 				}
 			}
 		}
-		return -2;
+		return FLAG;
 	}
-
-	public int getButtonCol(Object event){
-		for(int r = 0; r < BSIZE; r++) {
+	/**
+	 * This method send the presenter the column of the selected button.
+	 * @param event The event triggered by the selected button
+	 * @return This is the column of the selected button
+	 */
+	public final int getButtonCol(final Object event) {
+		for (int r = 0; r < BSIZE; r++) {
 			for (int c = 0; c < BSIZE; c++) {
-				if (reversiBoardSquares[r][c] == event) { //event is e.getSource()
+				if (boardSquares[r][c] == event) { //event is e.getSource()
 					return c;
 				}
 			}
 		}
-		return -2;
+		return FLAG;
+	}
+
+	/**
+	 * This returns the frame so the presenter can use it.
+	 * @return This is the frame of the GUI
+	 */
+	public final JFrame getFrame() {
+		return frame;
+	}
+	/**
+	 * This gets the value of b for the presenter to use.
+	 * @return This is the value of b
+	 */
+	public final int getB() {
+		return b;
+	}
+	/**
+	 * This sets b to a new value.
+	 * @param i The new value to set b to
+	 */
+	public final void setB(final int i) {
+		b = i;
+	}
+	/**
+	 * This gets the value of w for the presenter to use.
+	 * @return This is the value of w
+	 */	
+	public final int getW() {
+		return w;
+	}
+	/**
+	 * This sets b to a new value.
+	 * @param i The new value to set b to
+	 */
+	public final void setW(final int i) {
+		w = i;
+	}
+
+	/**
+	 * This gets the background color.
+	 * @return The value of the background color
+	 */
+	public final Color getBackground() { 
+		return background;
+	}
+	/**
+	 * This sets the background color.
+	 * @param c The new value of the background color
+	 */
+	public final void setBackground(final Color c) {
+		background = c;
+	}
+	/**
+	 * This gets player 1's color.
+	 * @return The value of player 1's color
+	 */
+	public final Color getP1Color() {
+		return p1Color;
+	}
+	/**
+	 * This sets player 1's color.
+	 * @param c The new value of player 1's color
+	 */
+	public final void setP1Color(final Color c) {
+		p1Color = c;
+	}
+	/**
+	 * This gets player 2's color.
+	 * @return The value of player 2's color
+	 */
+	public final Color getP2Color() {
+		return p2Color;
+	}
+	/**
+	 * This sets player 2's color.
+	 * @param c The new value of player 2's color
+	 */
+	public final void setP2Color(final Color c) {
+		p2Color = c;
+	}
+	/**
+	 * This gets color of the help functions.
+	 * @return The color of the help functions
+	 */
+	public final Color getHelpColor() {
+		return helpColor;
+	}
+	/**
+	 * This sets the color of the help functions to a new value.
+	 * @param c The new color for the help functions
+	 */
+	public final void setHelpColor(final Color c) {
+		helpColor = c;
 	}
 }

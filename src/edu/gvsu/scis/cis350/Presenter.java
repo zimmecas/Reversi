@@ -1,9 +1,5 @@
 package edu.gvsu.scis.cis350;
 
-import java.util.Scanner;
-
-import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -32,20 +31,12 @@ public class Presenter {
 	private View view;
 
 	/**
-	 * This variable is used for scanning in user input.
+	 * This variable is used for loading and saving a game file.
 	 */
-	private static Scanner s = new Scanner(System.in, "UTF-8");
-	
-
-	final JFileChooser fc = new JFileChooser();
+	private final JFileChooser fc = new JFileChooser();
 
 	/**
-	 * Used to help catch invalid inputs.
-	 */
-	private static final int FLAG = -2;
-
-	/**
-	 * Indicates if player vs player or player vs computer
+	 * Indicates if player vs player or player vs computer.
 	 */
 	private boolean pvp = true;
 
@@ -57,59 +48,52 @@ public class Presenter {
 	public Presenter(final Model m, final View v) {
 		model = m;
 		view = v;
-
 		view.updateBoard(model.getBoard());		
-
 		view.addBoardActionListeners(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				int row = view.getButtonRow(e.getSource());
 				int col = view.getButtonCol(e.getSource());
 				nextTurnGUI(col, row);
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
-				if (model.isGameOver()) { //This does not seem to work
-					System.out.println("!!!!Game over detected by Presenter!!!!");
+				if (model.isGameOver()) {
 					if (model.countPieces()[1] > model.countPieces()[2]) {
-						System.out.println("Player 1 wins!");
 						view.updateWinsPanel(1, 0, false);
-					} else if (model.countPieces()[2] > model.countPieces()[1]) {
-						System.out.println("Player 2 wins!");
+					} else if (model.countPieces()[2]
+							> model.countPieces()[1]) {
 						view.updateWinsPanel(0, 1, false);
 					} else {
-						System.out.println("Tie!");
 						view.updateWinsPanel(1, 1, true);
 					}
 					newGame();
 					count = model.countPieces();
 					view.updateBoard(model.getBoard());
-					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
+					view.updateCurrentPlayer(
+							model.getPlayer(), count[1], count[2]);
 				}
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
-
 		view.addQuitActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				System.exit(0); 
 			}
 		});
-
 		view.addNewGameActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				newGame();
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
-		
 		view.addPVPActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				pvp = true;
 				newGame();
 				int[] count = model.countPieces();
@@ -117,10 +101,9 @@ public class Presenter {
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});
-		
 		view.addPVCActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				pvp = false;
 				newGame();
 				int[] count = model.countPieces();
@@ -128,103 +111,123 @@ public class Presenter {
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 			}
 		});	
-		
 		view.addSaveActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-			try {
-				if(fc.showSaveDialog(view.frame) == JFileChooser.APPROVE_OPTION){
-					File file = fc.getSelectedFile();
-				FileOutputStream saveFile = new FileOutputStream(file);
-				ObjectOutputStream save = new ObjectOutputStream(saveFile);
-				save.writeObject(model);
-				save.writeObject(view.b);
-				save.writeObject(view.w);
-				save.writeObject(model.getPlayer());
-				save.writeObject(pvp);
-				save.close();
-				}
+			public void actionPerformed(final ActionEvent e) {
+				try {
+					if (fc.showSaveDialog(view.getFrame()) 
+							== JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						FileOutputStream saveFile = new FileOutputStream(file);
+						ObjectOutputStream save = 
+								new ObjectOutputStream(saveFile);
+						save.writeObject(model);
+						save.writeObject(view.getB());
+						save.writeObject(view.getW());
+						save.writeObject(model.getPlayer());
+						save.writeObject(pvp);
+						save.close();
+					}
 				} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
+					e1.printStackTrace();
+				}
 			}
 		});	
-		
 		view.addLoadActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				try {
-					if(fc.showOpenDialog(view.frame) == JFileChooser.APPROVE_OPTION){
+					if (fc.showOpenDialog(view.getFrame()) 
+							== JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-					FileInputStream loadFile = new FileInputStream(file);
-					ObjectInputStream load = new ObjectInputStream(loadFile);
-					model = (Model) load.readObject();
-					view.b = (int) load.readObject();
-					view.w = (int) load.readObject();
-					if(model.getPlayer() != (Piece) load.readObject())
-						model.changeTurn();
-					pvp = (Boolean) load.readObject();
-					int[] count = model.countPieces();
-					view.updateBoard(model.getBoard());
-					view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
-					view.updateWinsPanel(0, 0, false);
-					load.close();
+						FileInputStream loadFile = new FileInputStream(file);
+						ObjectInputStream load =
+								new ObjectInputStream(loadFile);
+						model = (Model) load.readObject();
+						view.setB((int) load.readObject());
+						view.setW((int) load.readObject());
+						if (model.getPlayer() != (Piece) load.readObject()) {
+							model.changeTurn();	
+						}
+						pvp = (Boolean) load.readObject();
+						int[] count = model.countPieces();
+						view.updateBoard(model.getBoard());
+						view.updateCurrentPlayer(
+								model.getPlayer(), count[1], count[2]);
+						view.updateWinsPanel(0, 0, false);
+						load.close();
 					}
-					} catch (Exception e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				} 
 			}
 		});	
-		
 		view.addCustomActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				view.background = JColorChooser.showDialog(null, "Choose a Background Color", view.background);
-				view.p1Color = JColorChooser.showDialog(null, "Choose a Color for Player 1", view.p1Color);
-				view.p2Color = JColorChooser.showDialog(null, "Choose a Color for Player 2", view.p2Color);
-				view.helpColor = JColorChooser.showDialog(null, "Choose a Color for Showing Moves", view.helpColor);
+			public void actionPerformed(final ActionEvent e) {
+				view.setBackground(JColorChooser.showDialog(null,
+						"Choose a Background Color", view.getBackground()));
+				view.setP1Color(JColorChooser.showDialog(null,
+						"Choose a Color for Player 1", view.getP1Color()));
+				view.setP2Color(JColorChooser.showDialog(null,
+						"Choose a Color for Player 2", view.getP2Color()));
+				view.setHelpColor(JColorChooser.showDialog(null,
+						"Choose a Color for Showing Moves",
+						view.getHelpColor()));
 				view.updateBoard(model.getBoard());
 			}
 		});	
-		
 		view.addValidMovesActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
-				for(int i = 0; i < model.getBoardSize(); i++)
-					for(int j = 0; j < model.getBoardSize(); j++)
-						if(model.isValidMove(j, i)){
-						
+			public void actionPerformed(final ActionEvent e) {
+				for (int i = 0; i < model.getBoardSize(); i++) {
+					for (int j = 0; j < model.getBoardSize(); j++) {
+						if (model.isValidMove(j, i)) {
 							view.showValidMoves(i, j);
-							}
+						}
+					}
+				}
 			}
 		});
-		
 		view.addRecommendActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
+			public void actionPerformed(final ActionEvent e) {
 				view.showValidMoves(model.bestMove()[1], model.bestMove()[2]);
 			}
 		});
-		
 		view.addHelpActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e){
-				JOptionPane.showMessageDialog(null, "The Rules\n\nReversi takes place between two players, black and white, on an 8x8 board of 64 squares."
-+"\nThe board is set up initially with two black discs and two white discs in the center."
-+"\nBlack always plays first with players then taking alternate turns."
-+"\nAt each turn a player must place a disc with their colour face up on one of the empty squares of the board, adjacent to an opponent's disc "
-+"\nsuch that one or more straight lines (horizontal, vertical or diagonal) are formed from the newly placed disc,"
-+"\nthrough one or more of the opponent's discs and up to other discs of their own colour already on the board. "
-+"\nAll the intervening discs of the opponent's colour are flipped to the colour of the newly laid disc."
-+"\nDiscs may be flipped from one colour to the other but once played are not moved from one square to another or removed from the board."
-+"\nPlayers may not pass unless there is no valid move available to them in which case they must pass."
-+"\nPlay continues until neither player is able to move, usually when all 64 squares have been played."
-+"\nThe winner is the player with most pieces turned to their colour at the close of play.");
+			public void actionPerformed(final ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "The Rules\n\nReversi"
+						+ " takes place between two players, black and white,"
+						+ " on an 8x8 board of 64 squares."
+						+ "\nThe board is set up initially with two black"
+						+ " discs and two white discs in the center."
+						+ "\nBlack always plays first with players then"
+						+ " taking alternate turns."
+						+ "\nAt each turn a player must place a disc with"
+						+ " their colour face up on one of the empty squares"
+						+ " of the board, adjacent to an opponent's disc "
+						+ "\nsuch that one or more straight lines"
+						+ " (horizontal, vertical or diagonal) are formed"
+						+ " from the newly placed disc,"
+						+ "\nthrough one or more of the opponent's"
+						+ " discs and up to other discs of their own"
+						+ " colour already on the board. "
+						+ "\nAll the intervening discs of the opponent's color"
+						+ " are flipped to the colour of the newly laid disc."
+						+ "\nDiscs may be flipped from one colour to the other"
+						+ " but once played are not moved from one square to"
+						+ " another or removed from the board."
+						+ "\nPlayers may not pass unless there is no valid move"
+						+ " available to them in which case they must pass."
+						+ "\nPlay continues until neither player is able to"
+						+ " move, usually when all 64 squares have been played."
+						+ "\nThe winner is the player with most pieces turned"
+						+ " to their colour at the close of play.");
 			}
 		});
 	}
-
 
 	/**
 	 * This method returns the view.
@@ -269,28 +272,31 @@ public class Presenter {
 	}
 
 	/**
-	 * This method resets the game.
+	 * This method starts a new game.
 	 */
-
-
-	public void newGame() {
+	public final void newGame() {
 		model = new Model();
 	}
 
-	void nextTurnGUI(int col, int row){
+	/**
+	 * This method checks if the selected button is a valid move.
+	 * If the move is valid, it then calls the methods that place the piece
+	 * and change the turn. If the move is not valid, it sends an alert to view.
+	 * @param col This is the column number of the button selected 
+	 * @param row This is the row number of the button selected
+	 */
+	final void nextTurnGUI(final int col, final int row) {
 		if (placePiece(col, row)) { //y,x
 			model.changeTurn();
-			if (!pvp) { //this isn't fully functional
+			if (!pvp) {
 				int[] count = model.countPieces();
 				view.updateBoard(model.getBoard());
 				view.updateCurrentPlayer(model.getPlayer(), count[1], count[2]);
 				model.placePiece(model.bestMove()[2], model.bestMove()[1]);
 				model.changeTurn();
 			}
-		} else { //If the move is not valid
+		} else {
 			view.sendAlert("Invalid move.");
 		}
-		
-
 	}
 }

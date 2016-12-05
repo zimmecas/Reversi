@@ -1,17 +1,12 @@
 package edu.gvsu.scis.cis350;
 
-import java.io.Serializable;
 
 /**
  * This class controls the board.
  * @author Brendan Dent, Casey Zimmerman, Caitlin Crowe
  *
  */
-public class Model implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Model {
 	/**
 	 * The board width.
 	 */
@@ -40,6 +35,10 @@ public class Model implements Serializable {
 	 * How large the results array is.
 	 */
 	private static final int RESULTSINT = 3;
+	/**
+	 * How large the array in bestMove() is.
+	 */
+	private static final int BESTMOVE = 3;
 	/**
 	 * This constructor makes and fills a board when called.
 	 */
@@ -188,7 +187,7 @@ public class Model implements Serializable {
 	 */
 
 	public final int [] bestMove() {
-		int [] max = new int[3];
+		int [] max = new int[BESTMOVE];
 		int prevMax = 0;
 		for (int k = 0; k < HEIGHT; k++) {
 			for (int h = 0; h < WIDTH; h++) {
