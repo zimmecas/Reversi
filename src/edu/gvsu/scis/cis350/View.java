@@ -199,13 +199,11 @@ public class View {
 
 		for (int i = 0; i < BSIZE; i++) {
 			for (int j = 0; j < BSIZE; j++) {
-				switch (j) {
-				case 0:
+				if (j == 0) {
 					reversiBoard.add(new JLabel(
 							"" + (i + 1), SwingConstants.CENTER));
-				default:
-					reversiBoard.add(boardSquares[j][i]);
 				}
+				reversiBoard.add(boardSquares[j][i]);
 			}
 		}
 
